@@ -1,7 +1,18 @@
+import { IsInt, IsString } from 'class-validator';
+
 export class User {
-    id: number;
-    email: string;
-    username: string;
-    password: string;
-    contact: string;
+  @IsInt()
+  id: number;
+
+  @IsString()
+  email: string;
+
+  @IsString()
+  username: string;
+
+  @IsString()
+  password: string;
+
+  @IsString()
+  contact?: string;
 }
