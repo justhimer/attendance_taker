@@ -9,3 +9,61 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Status {
+  PENDING
+  ATTENDED
+  LATE
+  ABSENT
+}
+
+model Users {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  username    String        @db.Text
+  password    String        @db.Text
+  contact     String?       @db.Text
+  created_at  DateTime      @default(now()) @db.Timestamptz
+  updated_at  DateTime      @updatedAt @db.Timestamptz
+  events      Events[]
+  attendance  Attendance[]
+  invitations Invitations[]
+}
+
+model Events {
+  id          Int           @id @default(autoincrement())
+  hosted_by   Int           @db.Integer
+  user        Users         @relation(fields: [hosted_by], references: [id])
+  title       String        @db.Text
+  start       DateTime      @db.Timestamptz
+  end         DateTime      @db.Timestamptz
+  venue       String        @db.Text
+  details     String        @db.Text
+  created_at  DateTime      @default(now()) @db.Timestamptz
+  updated_at  DateTime      @updatedAt @db.Timestamptz
+  attendance  Attendance[]
+  invitations Invitations[]
+}
+
+model Attendance {
+  id            Int      @id @default(autoincrement())
+  user_id       Int      @db.Integer
+  user          Users    @relation(fields: [user_id], references: [id])
+  event_id      Int      @db.Integer
+  event         Events   @relation(fields: [event_id], references: [id])
+  status        Status   @default(PENDING)
+  absent_reason String?  @db.Text
+  created_at    DateTime @default(now()) @db.Timestamptz
+  updated_at    DateTime @updatedAt @db.Timestamptz
+}
+
+model Invitations {
+  id          Int      @id @default(autoincrement())
+  event_id    Int      @db.Integer
+  event       Events   @relation(fields: [event_id], references: [id])
+  user_id     Int      @db.Integer
+  user        Users    @relation(fields: [user_id], references: [id])
+  is_accepted Boolean  @default(false)
+  created_at  DateTime @default(now()) @db.Timestamptz
+  updated_at  DateTime @updatedAt @db.Timestamptz
+}
