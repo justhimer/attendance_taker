@@ -19,5 +19,5 @@ export class User {
 
   @IsOptional()
   @IsString()
-  contact?: string;
+  phone?: string;
 }

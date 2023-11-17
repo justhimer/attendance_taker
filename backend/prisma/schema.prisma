@@ -18,16 +18,18 @@ enum Status {
 }
 
 model Users {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique
-  username    String        @db.Text
-  password    String        @db.Text
-  contact     String?       @db.Text
-  created_at  DateTime      @default(now()) @db.Timestamptz
-  updated_at  DateTime      @updatedAt @db.Timestamptz
-  events      Events[]
-  attendance  Attendance[]
-  invitations Invitations[]
+  id                Int           @id @default(autoincrement())
+  email             String        @unique
+  username          String        @db.Text
+  password          String        @db.Text
+  phone             String?       @db.Text
+  created_at        DateTime      @default(now()) @db.Timestamptz
+  updated_at        DateTime      @updatedAt @db.Timestamptz
+  events            Events[]
+  attendance        Attendance[]
+  invitations       Invitations[]
+  contacts_user     Contacts[]    @relation("contact_user")
+  contacts_contact  Contacts[]    @relation("contact_contact")
 }
 
 model Events {
@@ -64,6 +66,16 @@ model Invitations {
   user_id     Int      @db.Integer
   user        Users    @relation(fields: [user_id], references: [id])
   is_accepted Boolean  @default(false)
+  created_at  DateTime @default(now()) @db.Timestamptz
+  updated_at  DateTime @updatedAt @db.Timestamptz
+}
+
+model Contacts {
+  id          Int      @id @default(autoincrement())
+  user_id     Int      @db.Integer
+  user        Users    @relation("contact_user", fields: [user_id], references: [id])
+  contact_id  Int      @db.Integer
+  contact     Users    @relation("contact_contact", fields: [contact_id], references: [id])
   created_at  DateTime @default(now()) @db.Timestamptz
   updated_at  DateTime @updatedAt @db.Timestamptz
 }

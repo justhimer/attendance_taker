@@ -16,7 +16,7 @@ export class UsersService {
           email: createUserDto.email,
           username: createUserDto.username,
           password,
-          contact: createUserDto.contact,
+          phone: createUserDto.phone,
         },
       });
     } catch (error) {
