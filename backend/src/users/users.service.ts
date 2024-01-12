@@ -11,14 +11,18 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     try {
       const password = await hashPasswordBcrypt(createUserDto.password);
-      await this.prisma.users.create({
+
+      // create user and return user id
+      const user = await this.prisma.users.create({
         data: {
-          email: createUserDto.email,
-          username: createUserDto.username,
+          ...createUserDto,
           password,
-          phone: createUserDto.phone,
         },
       });
+
+      return {
+        id: user.id,
+      }
     } catch (error) {
       throw new Error(error);
     }
@@ -29,6 +33,19 @@ export class UsersService {
       const user = await this.prisma.users.findUnique({
         where: { id },
       });
+
+      return user;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findByEmail(email: string) {
+    try {
+      const user = await this.prisma.users.findUnique({
+        where: { email },
+      });
+      
       return user;
     } catch (error) {
       throw new Error(error);
