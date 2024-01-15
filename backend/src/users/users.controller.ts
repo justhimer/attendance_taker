@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpS
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Response } from 'src/utils/api/response';
+import { Response, SuccessHttpStatus } from 'src/utils/api/response';
+import { ReturnUserDto } from './dto/return-user.dto';
+import { plainToClass } from 'class-transformer';
 
 @Controller('users')
 export class UsersController {
@@ -11,21 +13,13 @@ export class UsersController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      // check if email has been registered
-      const foundUser = await this.usersService.findByEmail(createUserDto.email);
+      const foundUser = await this.usersService.find({ email: createUserDto.email });
       if (foundUser) {
         throw new HttpException('Email registered', HttpStatus.CONFLICT);
       }
 
-      // create user
       const userData = await this.usersService.create(createUserDto);
-      Logger.log('User created');
-
-      // return user data
-      const rs = new Response();
-      rs.statusCode = HttpStatus.CREATED;
-      rs.data = userData;
-      return rs;
+      return new Response(SuccessHttpStatus.CREATED, userData);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -33,17 +27,18 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findById(@Param('id') id: string) {
     try {
-      const user = await this.usersService.findById(+id);
+      const user = await this.usersService.find({ id: +id });
       if (!user) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
 
-      const rs = new Response();
-      rs.statusCode = HttpStatus.FOUND;
-      rs.data = user;
-      return rs;
+      // Omit the password field
+      const { password, ...userWithoutPassword } = user;
+      const returnUser = plainToClass(ReturnUserDto, userWithoutPassword);
+
+      return new Response(SuccessHttpStatus.OK, returnUser);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);

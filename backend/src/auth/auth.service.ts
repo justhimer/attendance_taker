@@ -1,26 +1,55 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
+import { checkPasswordBcrypt } from 'src/utils/security/bcrypt';
+
+export enum invalidAuthReason {
+  USER_NOT_FOUND = "User not found",
+  INVALID_PASSWORD = "Invalid password",
+}
+
+export interface AuthResponse {
+  isValid: boolean;
+  invalidReason?: invalidAuthReason;
+  user?: User;
+}
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async validateUser(email: string, password: string): Promise<AuthResponse> {
+    let isValid = true;
+    let invalidReason: invalidAuthReason = null;
+    try{
+      const foundUser = await this.usersService.find({ email });
+      if (!foundUser) {
+        isValid = false;
+        invalidReason = invalidAuthReason.USER_NOT_FOUND;
+      }
+  
+      const passwordMatch = await checkPasswordBcrypt(password, foundUser.password);
+      if (!passwordMatch) {
+        isValid = false;
+        invalidReason = invalidAuthReason.INVALID_PASSWORD;
+      }
+  
+      return {
+        isValid,
+        invalidReason,
+        user: foundUser,
+      } 
+    } catch (error) {
+      throw new Error(error);
+    }
+
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async generateToken(payload: {id: number}) {
+    return await this.jwtService.signAsync(payload);
   }
 }

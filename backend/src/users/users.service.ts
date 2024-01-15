@@ -3,12 +3,19 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'nestjs-prisma';
 import { hashPasswordBcrypt } from 'src/utils/security/bcrypt';
+import { plainToClass } from "class-transformer";
+import { User } from './entities/user.entity';
+
+interface FindUserRequest {
+  id?: number;
+  email?: string;
+}
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<{ id: number }> {
     try {
       const password = await hashPasswordBcrypt(createUserDto.password);
 
@@ -28,25 +35,26 @@ export class UsersService {
     }
   }
 
-  async findById(id: number) {
+  async find(request: FindUserRequest): Promise<User> {
     try {
+      if (!request.id && !request.email) {
+        throw new Error('Missing user id or email');
+      }
+
+      // find user by id or email
       const user = await this.prisma.users.findUnique({
-        where: { id },
+        where: {
+          id: request.id,
+          email: request.email,
+        },
       });
 
-      return user;
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
+      let returnUser: User = null;
+      if (user) {
+        returnUser = plainToClass(User, user);
+      }
 
-  async findByEmail(email: string) {
-    try {
-      const user = await this.prisma.users.findUnique({
-        where: { email },
-      });
-      
-      return user;
+      return returnUser;
     } catch (error) {
       throw new Error(error);
     }

@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class User {
   @IsNotEmpty()
@@ -20,4 +20,12 @@ export class User {
   @IsOptional()
   @IsString()
   phone?: string;
+
+  @IsNotEmpty()
+  @IsDate()
+  created_at: Date;
+
+  @IsNotEmpty()
+  @IsDate()
+  updated_at: Date;
 }
