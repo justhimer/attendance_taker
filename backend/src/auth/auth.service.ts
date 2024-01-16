@@ -12,7 +12,7 @@ export enum invalidAuthReason {
 export interface AuthResponse {
   isValid: boolean;
   invalidReason?: invalidAuthReason;
-  user?: User;
+  validatedUser?: User;
 }
 
 @Injectable()
@@ -41,7 +41,7 @@ export class AuthService {
       return {
         isValid,
         invalidReason,
-        user: foundUser,
+        validatedUser: foundUser,
       } 
     } catch (error) {
       throw new Error(error);

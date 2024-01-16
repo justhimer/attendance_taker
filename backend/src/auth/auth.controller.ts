@@ -36,17 +36,17 @@ export class AuthController {
         }
       }
 
-      if (!validationResult.user) {
+      if (!validationResult.validatedUser) {
         throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
       }
   
-      const payload = { id: validationResult.user.id}
+      const payload = { id: validationResult.validatedUser.id}
       const token = await this.authService.generateToken(payload);
 
       const returnData = {
         token,
         user: {
-          id: validationResult.user.id,
+          id: validationResult.validatedUser.id,
         }
       }
 
