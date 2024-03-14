@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Logger, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Response, SuccessHttpStatus } from 'src/utils/api/response';
 import { ReturnUserDto } from './dto/return-user.dto';
 import { plainToClass } from 'class-transformer';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -26,9 +27,12 @@ export class UsersController {
     }
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string) {
+  @UseGuards(AuthGuard('jwt'))
+  @Get()
+  async find(@Request() req) {
     try {
+      const id = req.user.id;
+
       const user = await this.usersService.find({ id: +id });
       if (!user) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -45,13 +49,13 @@ export class UsersController {
     }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  //   return this.usersService.update(+id, updateUserDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.usersService.remove(+id);
+  // }
 }

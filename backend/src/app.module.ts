@@ -10,7 +10,7 @@ import { AuthModule } from './auth/auth.module';
     // PrismaModule.forRoot(),
     UsersModule, 
     AuthModule
-  ],
+  ], // forRoot() : global use
   controllers: [AppController],
   providers: [AppService],
 })

@@ -9,6 +9,9 @@ interface AuthRequest {
 
 interface AuthResponse {
   token: string;
+  user: {
+    id: number;
+  }
 }
 
 @Controller('auth')
@@ -17,7 +20,7 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post()
+  @Post('login')
   async authenticate(@Body() authRequest: AuthRequest) {
     try{
       const validationResult = await this.authService.validateUser(authRequest.email, authRequest.password);
@@ -43,7 +46,7 @@ export class AuthController {
       const payload = { id: validationResult.validatedUser.id}
       const token = await this.authService.generateToken(payload);
 
-      const returnData = {
+      const returnData: AuthResponse = {
         token,
         user: {
           id: validationResult.validatedUser.id,
