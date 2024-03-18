@@ -6,7 +6,7 @@ import { hashPasswordBcrypt } from 'src/utils/security/bcrypt';
 import { plainToClass } from "class-transformer";
 import { User } from './entities/user.entity';
 
-interface FindUserRequest {
+export interface FindUserRequest {
   id?: number;
   email?: string;
 }
@@ -60,11 +60,41 @@ export class UsersService {
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    try {
+      // if password is provided, hash it
+      if (updateUserDto.password) {
+        updateUserDto.password = await hashPasswordBcrypt(updateUserDto.password);
+      }
+
+      // update user and return updated user
+      const user = await this.prisma.users.update({
+        where: { id },
+        data: updateUserDto,
+      });
+
+      return plainToClass(User, user);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<void> {
+    try {
+      // delete user and return deleted user
+      await this.prisma.users.delete({
+        where: { id },
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
   }
+
+  // update(id: number, updateUserDto: UpdateUserDto) {
+  //   return `This action updates a #${id} user`;
+  // }
+
+  // remove(id: number) {
+  //   return `This action removes a #${id} user`;
+  // }
 }
