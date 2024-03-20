@@ -10,11 +10,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Status {
+enum AcceptanceStatus {
   PENDING
-  ATTENDED
-  LATE
-  ABSENT
+  ACCEPTED
+  REJECTED
 }
 
 model Users {
@@ -48,15 +47,16 @@ model Events {
 }
 
 model Attendance {
-  id            Int      @id @default(autoincrement())
-  user_id       Int      @db.Integer
-  user          Users    @relation(fields: [user_id], references: [id])
-  event_id      Int      @db.Integer
-  event         Events   @relation(fields: [event_id], references: [id])
-  status        Status   @default(PENDING)
-  absent_reason String?  @db.Text
-  created_at    DateTime @default(now()) @db.Timestamptz
-  updated_at    DateTime @updatedAt @db.Timestamptz
+  id            Int        @id @default(autoincrement())
+  user_id       Int        @db.Integer
+  user          Users      @relation(fields: [user_id], references: [id])
+  event_id      Int        @db.Integer
+  event         Events     @relation(fields: [event_id], references: [id])
+  attend_time   DateTime?  @db.Timestamptz
+  late_reason   String?    @db.Text
+  absent_reason String?    @db.Text
+  created_at    DateTime   @default(now()) @db.Timestamptz
+  updated_at    DateTime   @updatedAt @db.Timestamptz
 }
 
 model Invitations {
@@ -65,7 +65,7 @@ model Invitations {
   event       Events   @relation(fields: [event_id], references: [id])
   user_id     Int      @db.Integer
   user        Users    @relation(fields: [user_id], references: [id])
-  is_accepted Boolean  @default(false)
+  status      AcceptanceStatus @default(PENDING)
   created_at  DateTime @default(now()) @db.Timestamptz
   updated_at  DateTime @updatedAt @db.Timestamptz
 }

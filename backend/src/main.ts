@@ -8,7 +8,10 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log', 'verbose'],
   });
 
-  app.useGlobalPipes(new ValidationPipe);
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,  // transform the incoming payload to the DTO object
+    whitelist: true,  // strip away any extra properties that are not in the DTO
+  }));
 
   await app.listen(3000);
 }

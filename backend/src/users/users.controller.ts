@@ -52,6 +52,21 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  async findMe(@Request() req) {
+    try {
+      const user = await this.findUser({ id: req.user.id });
+
+      const returnUser: ReturnUserDto = this.omitUserPassword(user);
+
+      return new Response(SuccessHttpStatus.OK, returnUser);
+    } catch (error) {
+      Logger.error(error.message);
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async find(@Request() req, @Param('id') id: string) {
     try {

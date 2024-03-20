@@ -27,7 +27,7 @@ export class Event {
 
     @IsOptional()
     @IsString()
-    details: string;
+    details?: string;
 
     @IsNotEmpty()
     @IsDate()

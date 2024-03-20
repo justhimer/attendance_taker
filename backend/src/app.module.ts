@@ -5,12 +5,14 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 // import { PrismaModule } from 'nestjs-prisma';
 import { EventsModule } from './events/events.module';
+import { AttendanceModule } from './attendance/attendance.module';
+import { InvitationsModule } from './invitations/invitations.module';
 
 @Module({
   imports: [
     // PrismaModule.forRoot(),
     UsersModule, 
-    AuthModule, EventsModule
+    AuthModule, EventsModule, AttendanceModule, InvitationsModule
   ], // forRoot() : global use
   controllers: [AppController],
   providers: [AppService],
