@@ -1,11 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
-import { AuthService, invalidAuthReason } from './auth.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { AuthService } from './auth.service';
 import { Response, SuccessHttpStatus } from 'src/utils/api/response';
-
-interface AuthRequest {
-  email: string;
-  password: string;
-}
+import { AuthRequest } from './entities/authRequest.entity';
 
 interface AuthResponse {
   token: string;
@@ -23,38 +19,27 @@ export class AuthController {
   @Post('login')
   async authenticate(@Body() authRequest: AuthRequest) {
     try{
-      const validationResult = await this.authService.validateUser(authRequest.email, authRequest.password);
-      if (!validationResult.isValid) {
-        if (!validationResult.invalidReason) {
-          throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
-          switch (validationResult.invalidReason) {
-            case invalidAuthReason.USER_NOT_FOUND:
-              throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-            case invalidAuthReason.INVALID_PASSWORD:
-              throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
-            default:
-              throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-          }
-        }
-      }
-
-      if (!validationResult.validatedUser) {
-        throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-      }
+      const foundUser = await this.authService.validateUser(authRequest.email, authRequest.password);
   
-      const payload = { id: validationResult.validatedUser.id}
+      const payload = { id: foundUser.id }
       const token = await this.authService.generateToken(payload);
 
       const returnData: AuthResponse = {
         token,
         user: {
-          id: validationResult.validatedUser.id,
+          id: foundUser.id,
         }
       }
 
       return new Response(SuccessHttpStatus.OK, returnData);
     } catch (error) {
+      Logger.error(error.message);
+      if (error.message === this.authService.invalidAuthReason.USER_NOT_FOUND) {
+        error.status = HttpStatus.NOT_FOUND;
+      }
+      if (error.message === this.authService.invalidAuthReason.INVALID_PASSWORD) {
+        error.status = HttpStatus.UNAUTHORIZED;
+      }
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
