@@ -38,7 +38,7 @@ export class UsersService {
   async find(request: FindUserRequest): Promise<User> {
     try {
       if (!request.id && !request.email) {
-        throw new Error('Missing user id or email');
+        throw 'Missing user id or email';
       }
 
       // find user by id or email
