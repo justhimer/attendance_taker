@@ -1,0 +1,1 @@
+export const endpointUrl = 'http://localhost:3000';
