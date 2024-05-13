@@ -33,9 +33,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="thirdPage"
+        name="profile"
         options={{
-          title: 'Third Page',
+          title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'star' : 'star-outline'} color={color} />
           ),

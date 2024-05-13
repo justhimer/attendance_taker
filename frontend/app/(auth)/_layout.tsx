@@ -7,19 +7,19 @@ import Loader from '@/components/Loader';
 const AuthLayout = () => {
   const { loading, isLogged } = useGlobalContext();
 
-  if (!loading && isLogged) return <Redirect href="/(tabs)" />;
+  if (!loading && isLogged) return <Redirect href="/home" />;
 
   return (
     <>
       <Stack>
         <Stack.Screen
-          name="sign-in"
+          name="index"
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="sign-up"
+          name="sign_up"
           options={{
             headerShown: false,
           }}

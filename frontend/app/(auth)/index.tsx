@@ -41,18 +41,18 @@ const SignIn = () => {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View
-          className="w-full flex justify-center h-full px-4 my-6"
+          className="w-full flex justify-center h-full px-4 my-3"
           style={{
-            minHeight: Dimensions.get("window").height - 100,
+            minHeight: Dimensions.get("window").height - 200,
           }}
         >
           <Image
             source={images.logo}
             resizeMode="contain"
-            className="w-[115px] h-[34px]"
+            className="w-[250px] h-[250px] mx-auto"
           />
 
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+          <Text className="text-2xl font-semibold text-white mt-0 font-psemibold mx-auto">
             Log in to Attendance Taker
           </Text>
 
@@ -83,7 +83,7 @@ const SignIn = () => {
               Don't have an account?
             </Text>
             <Link
-              href={router.route("/auth/signup")}
+              href="/sign_up"
               className="text-lg font-psemibold text-secondary"
             >
               Signup
