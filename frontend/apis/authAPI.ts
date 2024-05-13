@@ -7,14 +7,32 @@ interface LoginData {
     password: string;
 }
 
-const route = 'users';
+const route = 'auth';
 
-export async function signIn(loginData: LoginData) {
-  const res = await fetch(`${endpointUrl}/${route}/current`, {
+export async function getCsrfToken() {
+  const res = await fetch(`${endpointUrl}/${route}/csrf-token`);
+  if (res.ok) {
+    const result = await res.json();
+    return result.token;
+  } else {
+    throw new Error('Get CSRF Token Failed.');
+  }
+}
+
+export async function signIn(loginData: LoginData, csrfToken: string) {
+  const json = JSON.stringify(loginData);
+  console.log('loginData: ', json);
+  console.log('csrf: ', csrfToken);
+  const res = await fetch(`${endpointUrl}/${route}/login`, {
     // credentials: 'same-origin',
     method: 'POST',
     body: JSON.stringify(loginData),
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'CSRF-Token': csrfToken,
+    },
   });
+  console.log(res);
 
   if (res.ok) {
     const result = await res.json();
@@ -27,7 +45,7 @@ export async function signIn(loginData: LoginData) {
     // }
     if (result.data) {
       return result.data;
-  }
+    }
   }
   
   const error = await responseErrorMsgHandler(res);

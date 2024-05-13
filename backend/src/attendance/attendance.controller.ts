@@ -3,7 +3,7 @@ import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Response, SuccessHttpStatus } from 'src/utils/api/response';
+import { CustomResponse, SuccessHttpStatus } from 'src/utils/api/CustomResponse';
 
 @Controller('attendance')
 export class AttendanceController {
@@ -19,7 +19,7 @@ export class AttendanceController {
         throw new HttpException('No attendance records found.', HttpStatus.NOT_FOUND);
       }
 
-      return new Response(SuccessHttpStatus.OK, attendanceRecords);
+      return new CustomResponse(SuccessHttpStatus.OK, attendanceRecords);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -36,7 +36,7 @@ export class AttendanceController {
         throw new HttpException('Attendance record not found.', HttpStatus.NOT_FOUND);
       }
 
-      return new Response(SuccessHttpStatus.OK, attendanceRecord);
+      return new CustomResponse(SuccessHttpStatus.OK, attendanceRecord);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -85,7 +85,7 @@ export class AttendanceController {
 
       const updatedAttendanceRecord = await this.attendanceService.update(+id, updateAttendanceDto);
 
-      return new Response(SuccessHttpStatus.OK, updatedAttendanceRecord);
+      return new CustomResponse(SuccessHttpStatus.OK, updatedAttendanceRecord);
     }
     catch (error) {
       Logger.error(error.message);
@@ -110,7 +110,7 @@ export class AttendanceController {
 
       await this.attendanceService.remove(+id);
 
-      return new Response(SuccessHttpStatus.OK, `Attendance record with id ${id} has been deleted.`);
+      return new CustomResponse(SuccessHttpStatus.OK, `Attendance record with id ${id} has been deleted.`);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);

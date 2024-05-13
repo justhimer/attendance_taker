@@ -3,7 +3,7 @@ import { InvitationsService } from './invitations.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Response, SuccessHttpStatus } from 'src/utils/api/response';
+import { CustomResponse, SuccessHttpStatus } from 'src/utils/api/CustomResponse';
 import { AcceptanceStatus, Invitation } from './entities/invitation.entity';
 import { FilterInvitationDto } from './dto/filter-invitation.dto';
 
@@ -21,7 +21,7 @@ export class InvitationsController {
         req.user.id, 
         createInvitationDto
       );
-      return new Response(SuccessHttpStatus.CREATED, invitationData);
+      return new CustomResponse(SuccessHttpStatus.CREATED, invitationData);
     } catch (error) {
       Logger.error(error.message);
       if (error.message === this.invitationsService.createErrorMessages.NOT_FOUND) {
@@ -50,7 +50,7 @@ export class InvitationsController {
         throw new HttpException('No invitations found.', HttpStatus.NOT_FOUND);
       }
 
-      return new Response(SuccessHttpStatus.OK, invitations);
+      return new CustomResponse(SuccessHttpStatus.OK, invitations);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -67,7 +67,7 @@ export class InvitationsController {
         throw new HttpException('Invitation not found.', HttpStatus.NOT_FOUND);
       }
 
-      return new Response(SuccessHttpStatus.OK, invitation);
+      return new CustomResponse(SuccessHttpStatus.OK, invitation);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -101,7 +101,7 @@ export class InvitationsController {
 
       const updatedInvitation = await this.invitationsService.update(+id, updateInvitationDto);
       
-      return new Response(SuccessHttpStatus.OK, updatedInvitation);
+      return new CustomResponse(SuccessHttpStatus.OK, updatedInvitation);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -124,7 +124,7 @@ export class InvitationsController {
       }
 
       await this.invitationsService.remove(+id);
-      return new Response(SuccessHttpStatus.OK, `Invitation ${id} has been deleted`);
+      return new CustomResponse(SuccessHttpStatus.OK, `Invitation ${id} has been deleted`);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);

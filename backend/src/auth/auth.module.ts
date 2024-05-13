@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './strategy/jwt';
+import { CsrfMiddlewareForGettingToken } from 'src/auth/middlewares/csrf';
 
 @Module({
   imports: [
@@ -17,4 +18,10 @@ import { JwtStrategy } from './strategy/jwt';
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy]
 })
-export class AuthModule {}
+export class AuthModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CsrfMiddlewareForGettingToken)
+      .forRoutes('/auth/csrf-token');
+  }
+}
