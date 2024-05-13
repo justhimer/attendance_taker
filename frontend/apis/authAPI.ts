@@ -9,7 +9,7 @@ interface LoginData {
 
 const route = 'users';
 
-export async function login(loginData: LoginData) {
+export async function signIn(loginData: LoginData) {
   const res = await fetch(`${endpointUrl}/${route}/current`, {
     // credentials: 'same-origin',
     method: 'POST',
@@ -22,9 +22,12 @@ export async function login(loginData: LoginData) {
     // use asynstorage to store token
     await AsyncStorage.setItem('jwttoken', result.token);
     
-    if (result) {
-        return result;
-    }
+    // if (result) {
+    //     return result;
+    // }
+    if (result.data) {
+      return result.data;
+  }
   }
   
   const error = await responseErrorMsgHandler(res);

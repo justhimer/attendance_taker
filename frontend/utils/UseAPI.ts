@@ -1,29 +1,29 @@
-import { Alert } from "react-native";
-import { useEffect, useState } from "react";
+// import { Alert } from "react-native";
+// import { useEffect, useState } from "react";
 
-const useAPI = (fn: Function) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+// const useAPI = (fn: Function) => {
+//   const [data, setData] = useState([]);
+//   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const res = await fn();
-      setData(res);
-    } catch (error) {
-      Alert.alert("Error", (error as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  };
+//   const fetchData = async () => {
+//     setLoading(true);
+//     try {
+//       const res = await fn();
+//       setData(res);
+//     } catch (error) {
+//       Alert.alert("Error", (error as Error).message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+//   useEffect(() => {
+//     fetchData();
+//   }, []);
 
-  const refetch = () => fetchData();
+//   const refetch = () => fetchData();
 
-  return { data, loading, refetch };
-};
+//   return { data, loading, refetch };
+// };
 
-export default useAPI;
+// export default useAPI;

@@ -18,12 +18,12 @@ export async function getCurrentUser() {
 
   if (res.ok) {
     const result = await res.json();
-    if (result) {
-        return result;
-    }
-    // if (result.data) {
-    //     return result.data;
+    // if (result) {
+    //     return result;
     // }
+    if (result.data) {
+        return result.data;
+    }
   }
   
   const error = await responseErrorMsgHandler(res);
