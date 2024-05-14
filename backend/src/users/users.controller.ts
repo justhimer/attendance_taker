@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpS
 import { FindUserRequest, UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CustomResponse, SuccessHttpStatus } from 'src/utils/api/CustomResponse';
+import { Response, SuccessHttpStatus } from 'src/utils/api/Response';
 import { ReturnUserDto } from './dto/return-user.dto';
 import { plainToClass } from 'class-transformer';
 import { AuthGuard } from '@nestjs/passport';
@@ -44,7 +44,7 @@ export class UsersController {
       }
 
       const userData = await this.usersService.create(createUserDto);
-      return new CustomResponse(SuccessHttpStatus.CREATED, userData);
+      return new Response(SuccessHttpStatus.CREATED, userData);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -59,7 +59,7 @@ export class UsersController {
 
       const returnUser: ReturnUserDto = this.omitUserPassword(user);
 
-      return new CustomResponse(SuccessHttpStatus.OK, returnUser);
+      return new Response(SuccessHttpStatus.OK, returnUser);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,7 +76,7 @@ export class UsersController {
 
       const returnUser: ReturnUserDto = this.omitUserPassword(user);
 
-      return new CustomResponse(SuccessHttpStatus.OK, returnUser);
+      return new Response(SuccessHttpStatus.OK, returnUser);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -94,7 +94,7 @@ export class UsersController {
       const updatedUser: User = await this.usersService.update(+id, updateUserDto);
       const returnUser: ReturnUserDto = this.omitUserPassword(updatedUser);
 
-      return new CustomResponse(SuccessHttpStatus.OK, returnUser);
+      return new Response(SuccessHttpStatus.OK, returnUser);
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
@@ -111,7 +111,7 @@ export class UsersController {
 
       await this.usersService.remove(+id);
 
-      return new CustomResponse(SuccessHttpStatus.OK, { message: `User ${id} deleted` });
+      return new Response(SuccessHttpStatus.OK, { message: `User ${id} deleted` });
     } catch (error) {
       Logger.error(error.message);
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);

@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Logger, Request, Response } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CustomResponse, SuccessHttpStatus } from 'src/utils/api/CustomResponse';
+import { Response, SuccessHttpStatus } from 'src/utils/api/Response';
 import { AuthRequest } from './entities/authRequest.entity';
 
 interface AuthResponse {
@@ -33,7 +33,7 @@ export class AuthController {
         }
       }
 
-      return new CustomResponse(SuccessHttpStatus.OK, returnData);
+      return new Response(SuccessHttpStatus.OK, returnData);
     } catch (error) {
       Logger.error(error.message);
       if (error.message === this.authService.invalidAuthReason.USER_NOT_FOUND) {
@@ -43,27 +43,6 @@ export class AuthController {
         error.status = HttpStatus.UNAUTHORIZED;
       }
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  @Get('csrf-token')
-  async getCsrfToken(@Request() req, @Response() res) {
-    try{
-      Logger.debug('Getting CSRF-Token...', 'AuthController.getCsrfToken');
-      const token: string = req.csrfToken();
-
-      const returnData: any = {
-        token: token,
-      }
-      
-      res.send(returnData);
-  
-      // res.cookie('CSRF-Token', token);
-      // Logger.log('CSRF-Token saved in cookie', 'AuthController.getCsrfToken');
-      // res.send({ message: 'CSRF-Token saved in cookie' });
-    } catch (error) {
-      Logger.error(error.message);
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

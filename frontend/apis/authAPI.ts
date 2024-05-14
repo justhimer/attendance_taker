@@ -9,28 +9,17 @@ interface LoginData {
 
 const route = 'auth';
 
-export async function getCsrfToken() {
-  const res = await fetch(`${endpointUrl}/${route}/csrf-token`);
-  if (res.ok) {
-    const result = await res.json();
-    return result.token;
-  } else {
-    throw new Error('Get CSRF Token Failed.');
-  }
-}
-
-export async function signIn(loginData: LoginData, csrfToken: string) {
+export async function signIn(loginData: LoginData) {
   const json = JSON.stringify(loginData);
   console.log('loginData: ', json);
-  console.log('csrf: ', csrfToken);
   const res = await fetch(`${endpointUrl}/${route}/login`, {
     // credentials: 'same-origin',
     method: 'POST',
     body: JSON.stringify(loginData),
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'CSRF-Token': csrfToken,
-    },
+    // headers: {
+    //   'Content-Type': 'application/json; charset=utf-8',
+    //   'CSRF-Token': csrfToken,
+    // },
   });
   console.log(res);
 

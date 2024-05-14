@@ -6,7 +6,7 @@ export enum SuccessHttpStatus {
     ACCEPTED = HttpStatus.ACCEPTED,
 }
 
-export class CustomResponse {
+export class Response {
     statusCode: SuccessHttpStatus;
     data: any;
     // messages?: string[];

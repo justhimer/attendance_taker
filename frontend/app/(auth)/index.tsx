@@ -17,9 +17,6 @@ const SignIn = () => {
   });
 
   const submit = async () => {
-    const { csrfToken } = useGlobalContext();
-    console.log("csrfToken: ", csrfToken);
-    
     if (form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
     }
@@ -27,7 +24,7 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      const result = await signIn({email: form.email, password: form.password}, csrfToken);
+      const result = await signIn({email: form.email, password: form.password});
       console.log("result: ", result);
       setUser(result);
       setIsLogged(true);

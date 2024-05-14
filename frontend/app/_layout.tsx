@@ -6,30 +6,11 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { getCsrfToken } from '@/apis/authAPI';
-import { useGlobalContext } from '@/context/GlobalProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { csrfToken, setCsrfToken } = useGlobalContext();
-
-  useEffect(() => {
-    // async function runGetCsrfToken() {
-    //   const token = await getCsrfToken();
-    //   setCsrfToken(token);
-    //   console.log("csrf token set: ", csrfToken);
-    // }
-
-    // runGetCsrfToken();
-    getCsrfToken().then((res: any) => {
-      console.log("getCsrfToken: ", res);
-      setCsrfToken(res);
-      console.log("csrf token set: ", csrfToken);
-    });
-  }, [])
-
   const colorScheme = useColorScheme();
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -46,10 +27,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (error) throw error;
-    if (loaded) {
-      SplashScreen.hideAsync();
-      console.log("loaded fonts");
-    };
+    if (loaded) SplashScreen.hideAsync();
   }, [loaded, error]);
 
   if (!loaded && !error) {
