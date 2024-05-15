@@ -1,70 +1,104 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, Image, RefreshControl, Text, View } from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import images from "../../constants/Images";
+import useAPI from "../../utils/UseAPI";
+import { getEvents } from "../../apis/eventAPI";
+import { getInvitations } from "@/apis/invitationAPI";
+import { IListItem, ListItems } from "@/components/ListItems";
+import EmptyState from "@/components/EmptyState";
+import SearchInput from "@/components/SearchInput";
+// import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
 
-export default function HomeScreen() {
+
+
+const Home = () => {
+  const { data: events, refetch } = useAPI(getEvents);
+//   const { data: latestPosts } = useAPI(getLatestPosts);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  const [listItems, setListItems] = useState<IListItem[]>([]);
+
+  useEffect(() => {
+    if (events) {
+      const items = events.map((event: any) => ({
+        title: event.title,
+        description: event.start,
+      }));
+      setListItems(items);
+    }
+  }, [events]);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/AT_icon.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+    <SafeAreaView className="bg-primary">
+      <FlatList
+        data={events}
+        keyExtractor={(item: any) => item.$id}
+        renderItem={({ item }) => (
+          <Text className="text-3xl">{item.title}</Text>
+          // <VideoCard
+          //   title={item.title}
+          //   thumbnail={item.thumbnail}
+          //   video={item.video}
+          //   creator={item.creator.username}
+          //   avatar={item.creator.avatar}
+          // />
+        )}
+        ListHeaderComponent={() => (
+          <View className="flex my-6 px-4 space-y-6">
+            <View className="flex justify-between items-start flex-row mb-6">
+              <View>
+                <Text className="font-pmedium text-sm text-gray-100">
+                  Welcome Back
+                </Text>
+                <Text className="text-2xl font-psemibold text-white">
+                  User
+                </Text>
+              </View>
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 15,
-    left: 0,
-    position: 'absolute',
-  },
-});
+              <View className="mt-1.5">
+                <Image
+                  source={images.logo}
+                  className="w-14 h-14"
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+
+            <SearchInput />
+
+            {/* <View className="w-full flex-1 pt-5 pb-8">
+              <Text className="text-lg font-pregular text-gray-100 mb-3">
+                Latest Videos
+              </Text>
+
+              <Trending posts={latestPosts ?? []} />
+            </View> */}
+          </View>
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="No Videos Found"
+            subtitle="No videos created yet"
+          />
+        )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+      {/* <ListItems
+        data={listItems}
+      /> */}
+    </SafeAreaView>
+  );
+};
+
+export default Home;

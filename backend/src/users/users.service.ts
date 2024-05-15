@@ -11,11 +11,18 @@ export interface FindUserRequest {
   email?: string;
 }
 
+interface ICreateUserData {
+  id: number;
+  email: string;
+  username: string;
+  phone?: string;
+}
+
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  async create(createUserDto: CreateUserDto): Promise<{ id: number }> {
+  async create(createUserDto: CreateUserDto): Promise<ICreateUserData> {
     try {
       const password = await hashPasswordBcrypt(createUserDto.password);
 
@@ -29,6 +36,9 @@ export class UsersService {
 
       return {
         id: user.id,
+        email: user.email,
+        username: user.username,
+        phone: user.phone,
       }
     } catch (error) {
       throw new Error(error);

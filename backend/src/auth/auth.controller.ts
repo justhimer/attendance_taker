@@ -7,6 +7,9 @@ interface AuthResponse {
   token: string;
   user: {
     id: number;
+    email: string;
+    username: string;
+    phone?: string;
   }
 }
 
@@ -30,6 +33,9 @@ export class AuthController {
         token,
         user: {
           id: foundUser.id,
+          email: foundUser.email,
+          username: foundUser.username,
+          phone: foundUser.phone,
         }
       }
 

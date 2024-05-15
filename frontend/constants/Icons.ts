@@ -15,6 +15,9 @@
 const icons = {
     eye: require('../assets/icons/eye.png'),
     eyeHide: require('../assets/icons/eye-hide.png'),
+    search: require('../assets/icons/search.png'),
+    menu: require('../assets/icons/menu.png'),
+    logout: require('../assets/icons/logout.png'),
 };
 
 export default icons;

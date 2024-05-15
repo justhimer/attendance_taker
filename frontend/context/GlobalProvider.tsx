@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 // import { getCurrentUser } from "../apis/userAPI";
-import { getCsrfToken } from "@/apis/authAPI";
+// import { getCsrfToken } from "@/apis/authAPI";
 
 // interface GlobalContextProps {
 //   isLogged: boolean;
@@ -12,14 +12,26 @@ import { getCsrfToken } from "@/apis/authAPI";
 //   setCsrfToken: React.Dispatch<React.SetStateAction<string>>;
 // }
 
-const initialState: any = {
+interface IUser {
+  id: number;
+  email: string;
+  username: string;
+  password: string;
+  phone?: string;
+}
+
+const initialState: {
+  isLogged: boolean;
+  setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+  user: IUser | null;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
+  loading: boolean;
+} = {
   isLogged: false,
   setIsLogged: () => {},
   user: null,
   setUser: () => {},
   loading: false,
-  csrfToken: null,
-  setCsrfToken: () => {},
 };
 
 const GlobalContext = createContext(initialState);
@@ -28,8 +40,7 @@ export const useGlobalContext = () => useContext(GlobalContext);
 const GlobalProvider = ({ children }: any) => {
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [csrfToken, setCsrfToken] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // useEffect(() => {
   //   getCurrentUser()
@@ -50,21 +61,6 @@ const GlobalProvider = ({ children }: any) => {
   //     });
   // }, []);
 
-  // useEffect(() => {
-  //   getCsrfToken()
-  //   .then((res: any) => {
-  //     if (res) {
-  //       setCsrfToken(res);
-  //       console.log("set csrfToken: ", res);
-  //     } else {
-  //       console.log("no csrfToken");
-  //     }
-  //   })
-  //   .catch((error: Error) => {
-  //     console.log(error);
-  //   });
-  // }, []);
-
   return (
     <GlobalContext.Provider
       value={{
@@ -73,8 +69,6 @@ const GlobalProvider = ({ children }: any) => {
         user,
         setUser,
         loading,
-        csrfToken,
-        setCsrfToken,
       }}
     >
       {children}

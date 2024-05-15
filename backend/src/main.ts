@@ -2,12 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import helmet from 'helmet';
+// import helmet from 'helmet';
 
 async function bootstrap() {
-  const functionName = 'bootstrap';
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
+    // cors: true,
     // cors: {
     //   // only allow requests from this origin
     //   origin: 'http://localhost:8081',
@@ -15,13 +14,13 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log', 'verbose'],
   });
 
-  app.enableCors();
+  // app.enableCors();
 
   /******************************************/
   /**************** Security ****************/
   /******************************************/
   // Helmet
-  app.use(helmet());
+  // app.use(helmet());
 
   /********************************************/
   /************* Logging Request **************/
@@ -30,6 +29,7 @@ async function bootstrap() {
     if (req) {
       Logger.debug(`${req.method} ${req.url}`);
     }
+    next();
   });
 
   app.useGlobalPipes(new ValidationPipe({

@@ -2,41 +2,36 @@ import { responseErrorMsgHandler } from '../utils/ErrorMsgHandler';
 import { endpointUrl } from './apiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface LoginData {
+interface ISignInData {
     email: string;
     password: string;
 }
 
 const route = 'auth';
 
-export async function signIn(loginData: LoginData) {
+export async function signIn(loginData: ISignInData) {
   const json = JSON.stringify(loginData);
-  console.log('loginData: ', json);
   const res = await fetch(`${endpointUrl}/${route}/login`, {
-    // credentials: 'same-origin',
     method: 'POST',
     body: JSON.stringify(loginData),
-    // headers: {
-    //   'Content-Type': 'application/json; charset=utf-8',
-    //   'CSRF-Token': csrfToken,
-    // },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
   });
-  console.log(res);
 
   if (res.ok) {
     const result = await res.json();
     
-    // use asynstorage to store token
-    await AsyncStorage.setItem('jwttoken', result.token);
-    
-    // if (result) {
-    //     return result;
-    // }
     if (result.data) {
-      return result.data;
+      await AsyncStorage.setItem('jwttoken', result.data.token);
+      return result.data.user;
     }
   }
   
   const error = await responseErrorMsgHandler(res);
   throw new Error('Get User Failed.' + error.message);
+}
+
+export async function signOut() {
+  await AsyncStorage.removeItem('jwttoken');
 }
