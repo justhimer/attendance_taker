@@ -26,6 +26,6 @@ export async function getEvents() {
     }
   }
   
-  const error = await responseErrorMsgHandler(res);
-  throw new Error('Get User Failed.' + error.message);
+  // const error = await responseErrorMsgHandler(res);
+  // throw new Error('Get User Failed.' + error.message);
 }

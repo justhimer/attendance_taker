@@ -29,7 +29,7 @@ export async function signIn(loginData: ISignInData) {
   }
   
   const error = await responseErrorMsgHandler(res);
-  throw new Error('Get User Failed.' + error.message);
+  throw new Error('Sign in Failed.' + error.message);
 }
 
 export async function signOut() {

@@ -12,12 +12,30 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
+    <ApplicationProvider {...eva} theme={eva.dark}>
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           headerShown: false,
         }}>
+        <Tabs.Screen
+          name="events"
+          options={{
+            title: 'Events',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="invitations"
+          options={{
+            title: 'Invations',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            ),
+          }}
+        />
         <Tabs.Screen
           name="home"
           options={{
@@ -28,18 +46,18 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="default"
+          name="explore"
           options={{
-            title: 'Default',
+            title: 'Explore',
             tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+              <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
             ),
           }}
         />
         <Tabs.Screen
-          name="explore"
+          name="contacts"
           options={{
-            title: 'Explore',
+            title: 'Contacts',
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
             ),
