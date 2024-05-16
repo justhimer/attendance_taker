@@ -26,25 +26,25 @@ export class AttendanceController {
     }
   }
 
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('events')
+  // async findAttendEvents(@Request() req, @Body() filter?: any) {
+  //   try {
+  //     const attendanceRecords = await this.attendanceService.findAttendEvents(req.user.id, filter);
+
+  //     if (attendanceRecords.length === 0) {
+  //       throw new HttpException('No attendance records found.', HttpStatus.NOT_FOUND);
+  //     }
+
+  //     return new Response(SuccessHttpStatus.OK, attendanceRecords);
+  //   } catch (error) {
+  //     Logger.error(error.message);
+  //     throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
+
   @UseGuards(AuthGuard('jwt'))
-  @Get('events')
-  async findAttendEvents(@Request() req, @Body() filter?: any) {
-    try {
-      const attendanceRecords = await this.attendanceService.findAttendEvents(req.user.id, filter);
-
-      if (attendanceRecords.length === 0) {
-        throw new HttpException('No attendance records found.', HttpStatus.NOT_FOUND);
-      }
-
-      return new Response(SuccessHttpStatus.OK, attendanceRecords);
-    } catch (error) {
-      Logger.error(error.message);
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get(':id/event')
+  @Get(':id')
   async findAttendEvent(@Request() req, @Param('id') id: string) {
     try {
       const attendanceRecord = await this.attendanceService.findAttendEvent(+id, req.user.id);
@@ -60,22 +60,22 @@ export class AttendanceController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('event/:id')
-  async findAttendEventByEventID(@Request() req, @Param('id') event_id: string) {
-    try {
-      const attendanceRecord = await this.attendanceService.findAttendEventByEventID(+event_id, req.user.id);
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('event/:id')
+  // async findAttendEventByEventID(@Request() req, @Param('id') event_id: string) {
+  //   try {
+  //     const attendanceRecord = await this.attendanceService.findAttendEventByEventID(+event_id, req.user.id);
 
-      if (!attendanceRecord) {
-        throw new HttpException('Attendance record not found.', HttpStatus.NOT_FOUND);
-      }
+  //     if (!attendanceRecord) {
+  //       throw new HttpException('Attendance record not found.', HttpStatus.NOT_FOUND);
+  //     }
 
-      return new Response(SuccessHttpStatus.OK, attendanceRecord);
-    } catch (error) {
-      Logger.error(error.message);
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
+  //     return new Response(SuccessHttpStatus.OK, attendanceRecord);
+  //   } catch (error) {
+  //     Logger.error(error.message);
+  //     throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')

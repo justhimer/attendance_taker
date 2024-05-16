@@ -11,7 +11,7 @@ export class EventsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@Request() req, @Body() createEventRequestDto: CreateEventRequestDto) {
+  async createEvent(@Request() req, @Body() createEventRequestDto: CreateEventRequestDto) {
     try {
       // check if the start date and end date are valid date strings
       if (new Date(createEventRequestDto.start).toString() === 'Invalid Date' || new Date(createEventRequestDto.end).toString() === 'Invalid Date') {
@@ -31,7 +31,7 @@ export class EventsController {
         hosted_by: req.user.id,
       }
   
-      const eventData = await this.eventsService.create(createEvent);
+      const eventData = await this.eventsService.createEvent(createEvent);
   
       return new Response(SuccessHttpStatus.CREATED, eventData);
     } catch (error) {
@@ -41,10 +41,10 @@ export class EventsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get()
-  async findAll(@Request() req) {
+  @Get('/host')
+  async findEvents(@Request() req) {
     try {
-      const events = await this.eventsService.findAll(req.user.id);
+      const events = await this.eventsService.findHostEvents(req.user.id);
       if (events.length === 0) {
         throw new HttpException('No events found', HttpStatus.NOT_FOUND);
       }
@@ -56,10 +56,40 @@ export class EventsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':id')
-  async findOne(@Request() req, @Param('id') id: string) {
+  @Get('/attend')
+  async findAttendEvents(@Request() req) {
     try {
-      const event = await this.eventsService.findOne(+id, req.user.id);
+      const events = await this.eventsService.findAttendEvents(req.user.id);
+      if (events.length === 0) {
+        throw new HttpException('No events found', HttpStatus.NOT_FOUND);
+      }
+      return new Response(SuccessHttpStatus.OK, events);
+    } catch (error) {
+      Logger.error(error.message);
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/:id/host')
+  async findEvent(@Request() req, @Param('id') eventId: string) {
+    try {
+      const event = await this.eventsService.findHostEvent(+eventId, req.user.id);
+      if (!event) {
+        throw new HttpException('Event not found or you are not authorized to view this event', HttpStatus.NOT_FOUND);
+      }
+      return new Response(SuccessHttpStatus.OK, event);
+    } catch (error) {
+      Logger.error(error.message);
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/:id/attend')
+  async findAttendEvent(@Request() req, @Param('id') eventId: string) {
+    try {
+      const event = await this.eventsService.findAttendEvent(+eventId, req.user.id);
       if (!event) {
         throw new HttpException('Event not found or you are not authorized to view this event', HttpStatus.NOT_FOUND);
       }
@@ -75,7 +105,7 @@ export class EventsController {
   async update(@Request() req, @Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
     try {
       // check if event exists
-      const event = await this.eventsService.findOne(+id, req.user.id);
+      const event = await this.eventsService.findHostEvent(+id, req.user.id);
       if (!event) {
         throw new HttpException('Event not found or you are not authorized to update this event', HttpStatus.NOT_FOUND);
       }
@@ -99,7 +129,7 @@ export class EventsController {
   async remove(@Request() req, @Param('id') id: string) {
     try {
       // check if event exists
-      const event = await this.eventsService.findOne(+id, req.user.id);
+      const event = await this.eventsService.findHostEvent(+id, req.user.id);
       if (!event) {
         throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
       }

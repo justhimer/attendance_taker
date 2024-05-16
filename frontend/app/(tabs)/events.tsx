@@ -4,17 +4,16 @@ import { FlatList, Image, RefreshControl, Text, View, StyleSheet } from "react-n
 
 import images from "../../constants/Images";
 import useAPI from "../../utils/UseAPI";
-import { getEvents } from "../../apis/eventAPI";
+import { getAttendEvents, getHostEvents } from "../../apis/eventAPI";
 import { getInvitations } from "@/apis/invitationAPI";
 import { IListItem, ListItems } from "@/components/ListItems";
 import EmptyState from "@/components/EmptyState";
 import Card, { ICardData } from "@/components/Card";
 import { Layout, Tab, TabBar, TabView, Text as UIText } from "@ui-kitten/components";
-import { getAttendEvents } from "@/apis/attendanceAPI";
 // import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
 
 const Events = () => {
-  const { data: hostEvents, refetch: refetchHostEvents } = useAPI(getEvents);
+  const { data: hostEvents, refetch: refetchHostEvents } = useAPI(getHostEvents);
   const { data: attendevents, refetch: refetchAttendEvents } = useAPI(getAttendEvents);
 
   const [refreshing, setRefreshing] = useState(false);

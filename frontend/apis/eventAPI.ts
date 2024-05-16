@@ -4,10 +4,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const route = 'events';
 
-export async function getEvents() {
+export async function getHostEvents() {
   const jwttoken = await AsyncStorage.getItem('jwttoken');
 
-  const res = await fetch(`${endpointUrl}/${route}`, {
+  const res = await fetch(`${endpointUrl}/${route}/host`, {
     // credentials: 'same-origin',
     method: 'GET',
     headers: {
@@ -18,14 +18,28 @@ export async function getEvents() {
 
   if (res.ok) {
     const result = await res.json();
-    // if (result) {
-    //     return result;
-    // }
     if (result.data) {
         return result.data;
     }
   }
-  
-  // const error = await responseErrorMsgHandler(res);
-  // throw new Error('Get User Failed.' + error.message);
+}
+
+export async function getAttendEvents() {
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const res = await fetch(`${endpointUrl}/${route}/attend`, {
+    // credentials: 'same-origin',
+    method: 'GET',
+    headers: {
+      // 'CSRF-Token': csrfToken,
+      Authorization: `Bearer ${jwttoken}`,
+    },
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    if (result.data) {
+        return result.data;
+    }
+  }
 }

@@ -9,7 +9,7 @@ import { plainToClass } from 'class-transformer';
 export class EventsService {
   constructor(private prisma: PrismaService) { }
   
-  async create(createEventDto: CreateEventDto): Promise<{ id: number }>{
+  async createEvent(createEventDto: CreateEventDto): Promise<{ id: number }>{
     try {
       const event = await this.prisma.events.create({
         data: createEventDto,
@@ -23,11 +23,14 @@ export class EventsService {
     }
   }
 
-  async findAll(userId: number): Promise<Event[]> {
+  async findHostEvents(hostId: number): Promise<Event[]> {
     try {
       const events = await this.prisma.events.findMany({
         where: {
-          hosted_by: userId,
+          hosted_by: hostId,
+        },
+        orderBy: {
+          start: 'asc',
         },
       });
 
@@ -42,12 +45,62 @@ export class EventsService {
     }
   }
 
-  async findOne(id: number, userId: number): Promise<Event> {
+  async findAttendEvents(attendeeId: number): Promise<Event[]> {
+    try {
+      const events = await this.prisma.events.findMany({
+        where: {
+          attendance: {
+            some: {
+              user_id: attendeeId,
+            },
+          },
+        },
+        orderBy: {
+          start: 'asc',
+        },
+      });
+
+      let returnEvents: Event[] = [];
+      if (events.length > 0) {
+        returnEvents = events.map((event) => plainToClass(Event, event));
+      }
+  
+      return returnEvents;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findHostEvent(id: number, hostId: number): Promise<Event> {
     try {
       const event = await this.prisma.events.findFirst({
         where: {
           id,
-          hosted_by: userId,
+          hosted_by: hostId,
+        },
+      });
+
+      let returnEvent: Event = null;
+      if (event) {
+        returnEvent = plainToClass(Event, event);
+      }
+  
+      return returnEvent;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findAttendEvent(id: number, attendeeId: number): Promise<Event> {
+    try {
+      const event = await this.prisma.events.findFirst({
+        where: {
+          id,
+          attendance: {
+            some: {
+              user_id: attendeeId,
+            },
+          },
         },
       });
 

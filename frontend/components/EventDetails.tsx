@@ -3,7 +3,7 @@ import { useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { format as dateFormat, parseISO } from 'date-fns';
 
-export interface ICardData {
+export interface IEventData {
     title: string;
     host_by: string;
     start: string;
@@ -15,7 +15,7 @@ export interface ICardData {
 import icons from "../constants/Icons";
 import images from "@/constants/Images";
 
-const Card = (data: ICardData) => {
+const Card = (data: IEventData) => {
   return (
     <View>
 

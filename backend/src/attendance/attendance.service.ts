@@ -29,12 +29,14 @@ export class AttendanceService {
         ],
       };
   
-      if (filter?.user_id) {
-        whereClause.user_id = filter.user_id;
-      }
+      if (filter) {
+        if (filter.event_id) {
+          whereClause.event_id = filter.event_id;
+        }
   
-      if (filter?.event_id) {
-        whereClause.event_id = filter.event_id;
+        if (filter.user_id) {
+          whereClause.user_id = filter.user_id;
+        }
       }
 
       const attendanceRecords = await this.prisma.attendance.findMany({
@@ -48,41 +50,46 @@ export class AttendanceService {
   }
 
   // only the event host or the attendee can view the attendance records
-  async findAttendEvents(viewerId: number, filter?: FilterAttendanceDto): Promise<Attendance[]> {
-    try {
-      const whereClause: any = {
-        OR: [
-          {
-            event: {
-              hosted_by: viewerId,
-            },
-          },
-          {
-            user_id: viewerId,
-          },
-        ],
-      };
+  // async findAttendEvents(viewerId: number, filter?: FilterAttendanceDto): Promise<Attendance[]> {
+  //   try {
+  //     const whereClause: any = {
+  //       OR: [
+  //         {
+  //           event: {
+  //             hosted_by: viewerId,
+  //           },
+  //         },
+  //         {
+  //           user_id: viewerId,
+  //         },
+  //       ],
+  //     };
   
-      if (filter?.user_id) {
-        whereClause.user_id = filter.user_id;
-      }
+  //     if (filter?.user_id) {
+  //       whereClause.user_id = filter.user_id;
+  //     }
   
-      if (filter?.event_id) {
-        whereClause.event_id = filter.event_id;
-      }
+  //     if (filter?.event_id) {
+  //       whereClause.event_id = filter.event_id;
+  //     }
 
-      const attendanceRecords = await this.prisma.attendance.findMany({
-        where: whereClause,
-        include: {
-          event: true,
-        },
-      });
+  //     const attendanceRecords = await this.prisma.attendance.findMany({
+  //       where: whereClause,
+  //       include: {
+  //         event: true,
+  //       },
+  //       orderBy: {
+  //         event: {
+  //           start: 'asc'
+  //         }
+  //       }
+  //     });
 
-      return attendanceRecords.map(attendance => plainToClass(Attendance, attendance));
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
+  //     return attendanceRecords.map(attendance => plainToClass(Attendance, attendance));
+  //   } catch (error) {
+  //     throw new Error(error);
+  //   }
+  // }
 
   // only the event host or the attendee can view the attendance record
   async findAttendEvent(id: number, viewerId: number): Promise<AttendanceWithEventDetails>{
@@ -112,32 +119,32 @@ export class AttendanceService {
     }
   }
 
-  async findAttendEventByEventID(eventId: number, viewerId: number): Promise<AttendanceWithEventDetails>{
-    try {
-      const attendance = await this.prisma.attendance.findFirst({
-        where: {
-          event_id: eventId,
-          OR: [
-            {
-              event: {
-                hosted_by: viewerId,
-              },
-            },
-            {
-              user_id: viewerId,
-            },
-          ],
-        },
-        include: {
-          event: true,
-        },
-      });
+  // async findAttendEventByEventID(eventId: number, viewerId: number): Promise<AttendanceWithEventDetails>{
+  //   try {
+  //     const attendance = await this.prisma.attendance.findFirst({
+  //       where: {
+  //         event_id: eventId,
+  //         OR: [
+  //           {
+  //             event: {
+  //               hosted_by: viewerId,
+  //             },
+  //           },
+  //           {
+  //             user_id: viewerId,
+  //           },
+  //         ],
+  //       },
+  //       include: {
+  //         event: true,
+  //       },
+  //     });
       
-      return plainToClass(AttendanceWithEventDetails, attendance);
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
+  //     return plainToClass(AttendanceWithEventDetails, attendance);
+  //   } catch (error) {
+  //     throw new Error(error);
+  //   }
+  // }
 
   async update(id: number, updateAttendanceDto: UpdateAttendanceDto): Promise<Attendance> {
     try {
