@@ -1,6 +1,7 @@
 import { useState } from "react";
 // import { ResizeMode, Video } from "expo-av";
 import { View, Text, TouchableOpacity, Image } from "react-native";
+import { format as dateFormat, parseISO } from 'date-fns';
 
 export interface ICardData {
     title: string;
@@ -12,7 +13,6 @@ import icons from "../constants/Icons";
 import images from "@/constants/Images";
 
 const Card = (data: ICardData) => {
-
   return (
     <View className="flex flex-col items-center px-4 mb-5">
       <View className="flex flex-row gap-3 items-start">
@@ -30,7 +30,7 @@ const Card = (data: ICardData) => {
                 className="text-xs text-yellow-500 font-pregular"
                 numberOfLines={1}
             >
-                {data.date}
+                {dateFormat(data.date, 'yyyy-MM-dd HH:mm:ss')}
             </Text>
             <Text
               className="font-psemibold text-sm text-white"
@@ -38,12 +38,12 @@ const Card = (data: ICardData) => {
             >
               {data.title}
             </Text>
-            <Text
+            {/* <Text
               className="text-xs text-gray-100 font-pregular"
               numberOfLines={1}
             >
               {data.venue}
-            </Text>
+            </Text> */}
           </View>
         </View>
 
