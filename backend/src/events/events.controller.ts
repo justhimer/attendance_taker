@@ -71,7 +71,7 @@ export class EventsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/:id/host')
+  @Get('/host/:id')
   async findEvent(@Request() req, @Param('id') eventId: string) {
     try {
       const event = await this.eventsService.findHostEvent(+eventId, req.user.id);
@@ -86,7 +86,7 @@ export class EventsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/:id/attend')
+  @Get('/attend/:id')
   async findAttendEvent(@Request() req, @Param('id') eventId: string) {
     try {
       const event = await this.eventsService.findAttendEvent(+eventId, req.user.id);

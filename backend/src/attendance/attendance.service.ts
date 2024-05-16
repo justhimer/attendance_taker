@@ -14,7 +14,7 @@ export class AttendanceService {
   // so we don't need to create a separate create method for attendance
 
   // only the event host or the attendee can view the attendance records
-  async findAttendances(viewerId: number, filter?: FilterAttendanceDto): Promise<Attendance[]> {
+  async findAllAttendance(viewerId: number, filter?: FilterAttendanceDto): Promise<Attendance[]> {
     try {
       const whereClause: any = {
         OR: [
@@ -92,7 +92,7 @@ export class AttendanceService {
   // }
 
   // only the event host or the attendee can view the attendance record
-  async findAttendEvent(id: number, viewerId: number): Promise<AttendanceWithEventDetails>{
+  async findSingleAttendance(id: number, viewerId: number): Promise<AttendanceWithEventDetails>{
     try {
       const attendance = await this.prisma.attendance.findFirst({
         where: {
