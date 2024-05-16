@@ -11,9 +11,9 @@ export class AttendanceController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAll(@Request() req, @Body() filter?: any) {
+  async findAttendances(@Request() req, @Body() filter?: any) {
     try {
-      const attendanceRecords = await this.attendanceService.findAll(req.user.id, filter);
+      const attendanceRecords = await this.attendanceService.findAttendances(req.user.id, filter);
 
       if (attendanceRecords.length === 0) {
         throw new HttpException('No attendance records found.', HttpStatus.NOT_FOUND);
@@ -27,10 +27,44 @@ export class AttendanceController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':id')
-  async findOne(@Request() req, @Param('id') id: string) {
+  @Get('events')
+  async findAttendEvents(@Request() req, @Body() filter?: any) {
     try {
-      const attendanceRecord = await this.attendanceService.findOne(+id, req.user.id);
+      const attendanceRecords = await this.attendanceService.findAttendEvents(req.user.id, filter);
+
+      if (attendanceRecords.length === 0) {
+        throw new HttpException('No attendance records found.', HttpStatus.NOT_FOUND);
+      }
+
+      return new Response(SuccessHttpStatus.OK, attendanceRecords);
+    } catch (error) {
+      Logger.error(error.message);
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id/event')
+  async findAttendEvent(@Request() req, @Param('id') id: string) {
+    try {
+      const attendanceRecord = await this.attendanceService.findAttendEvent(+id, req.user.id);
+
+      if (!attendanceRecord) {
+        throw new HttpException('Attendance record not found.', HttpStatus.NOT_FOUND);
+      }
+
+      return new Response(SuccessHttpStatus.OK, attendanceRecord);
+    } catch (error) {
+      Logger.error(error.message);
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('event/:id')
+  async findAttendEventByEventID(@Request() req, @Param('id') event_id: string) {
+    try {
+      const attendanceRecord = await this.attendanceService.findAttendEventByEventID(+event_id, req.user.id);
 
       if (!attendanceRecord) {
         throw new HttpException('Attendance record not found.', HttpStatus.NOT_FOUND);
@@ -52,7 +86,7 @@ export class AttendanceController {
         throw new HttpException('No data provided for update.', HttpStatus.BAD_REQUEST);
       }
 
-      const attendanceRecord = await this.attendanceService.findOne(+id, req.user.id);
+      const attendanceRecord = await this.attendanceService.findAttendEvent(+id, req.user.id);
 
       if (!attendanceRecord) {
         throw new HttpException('Attendance record not found.', HttpStatus.NOT_FOUND);
@@ -97,7 +131,7 @@ export class AttendanceController {
   @Delete(':id')
   async remove(@Request() req, @Param('id') id: string) {
     try {
-      const attendanceRecord = await this.attendanceService.findOne(+id, req.user.id);
+      const attendanceRecord = await this.attendanceService.findAttendEvent(+id, req.user.id);
 
       if (!attendanceRecord) {
         throw new HttpException('Attendance record not found.', HttpStatus.NOT_FOUND);

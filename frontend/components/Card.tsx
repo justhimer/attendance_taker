@@ -5,7 +5,7 @@ import { format as dateFormat, parseISO } from 'date-fns';
 
 export interface ICardData {
     title: string;
-    date: string;
+    start: string;
     venue: string;
 }
 
@@ -30,7 +30,7 @@ const Card = (data: ICardData) => {
                 className="text-xs text-yellow-500 font-pregular"
                 numberOfLines={1}
             >
-                {dateFormat(data.date, 'yyyy-MM-dd HH:mm:ss')}
+                {dateFormat(data.start, 'yyyy-MM-dd HH:mm:ss')}
             </Text>
             <Text
               className="font-psemibold text-sm text-white"

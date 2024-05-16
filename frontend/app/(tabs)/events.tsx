@@ -10,20 +10,23 @@ import { IListItem, ListItems } from "@/components/ListItems";
 import EmptyState from "@/components/EmptyState";
 import Card, { ICardData } from "@/components/Card";
 import { Layout, Tab, TabBar, TabView, Text as UIText } from "@ui-kitten/components";
+import { getAttendEvents } from "@/apis/attendanceAPI";
 // import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
 
 const Events = () => {
-  const { data: events, refetch } = useAPI(getEvents);
+  const { data: hostEvents, refetch: refetchHostEvents } = useAPI(getEvents);
+  const { data: attendevents, refetch: refetchAttendEvents } = useAPI(getAttendEvents);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
+    await refetchHostEvents();
+    await refetchAttendEvents();
     setRefreshing(false);
   };
 
-  const [listItems, setListItems] = useState<ICardData[]>([]);
+  // const [listItems, setListItems] = useState<ICardData[]>([]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -41,13 +44,13 @@ const Events = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={events}
+        data={selectedIndex === 0 ? hostEvents : attendevents}
         keyExtractor={( item: any ) => item.id}
         renderItem={({ item }) => (
           <View>
             <Card
               title={item.title}
-              date={item.start}
+              start={item.start}
               venue={item.venue}
             />
           </View>
@@ -65,8 +68,8 @@ const Events = () => {
               selectedIndex={selectedIndex}
               onSelect={index => setSelectedIndex(index)}
             >
-              <Tab title='HOST' />
-              <Tab title='ATTEND' />
+              <Tab title='I HOST' />
+              <Tab title='I ATTEND' />
             </TabBar>
 
             {/* <SearchInput /> */}

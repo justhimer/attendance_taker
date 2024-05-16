@@ -14,7 +14,7 @@ export class AttendanceService {
   // so we don't need to create a separate create method for attendance
 
   // only the event host or the attendee can view the attendance records
-  async findAll(viewerId: number, filter?: FilterAttendanceDto): Promise<Attendance[]> {
+  async findAttendances(viewerId: number, filter?: FilterAttendanceDto): Promise<Attendance[]> {
     try {
       const whereClause: any = {
         OR: [
@@ -47,12 +47,76 @@ export class AttendanceService {
     }
   }
 
+  // only the event host or the attendee can view the attendance records
+  async findAttendEvents(viewerId: number, filter?: FilterAttendanceDto): Promise<Attendance[]> {
+    try {
+      const whereClause: any = {
+        OR: [
+          {
+            event: {
+              hosted_by: viewerId,
+            },
+          },
+          {
+            user_id: viewerId,
+          },
+        ],
+      };
+  
+      if (filter?.user_id) {
+        whereClause.user_id = filter.user_id;
+      }
+  
+      if (filter?.event_id) {
+        whereClause.event_id = filter.event_id;
+      }
+
+      const attendanceRecords = await this.prisma.attendance.findMany({
+        where: whereClause,
+        include: {
+          event: true,
+        },
+      });
+
+      return attendanceRecords.map(attendance => plainToClass(Attendance, attendance));
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   // only the event host or the attendee can view the attendance record
-  async findOne(id: number, viewerId: number): Promise<AttendanceWithEventDetails>{
+  async findAttendEvent(id: number, viewerId: number): Promise<AttendanceWithEventDetails>{
     try {
       const attendance = await this.prisma.attendance.findFirst({
         where: {
           id,
+          OR: [
+            {
+              event: {
+                hosted_by: viewerId,
+              },
+            },
+            {
+              user_id: viewerId,
+            },
+          ],
+        },
+        include: {
+          event: true,
+        },
+      });
+      
+      return plainToClass(AttendanceWithEventDetails, attendance);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findAttendEventByEventID(eventId: number, viewerId: number): Promise<AttendanceWithEventDetails>{
+    try {
+      const attendance = await this.prisma.attendance.findFirst({
+        where: {
+          event_id: eventId,
           OR: [
             {
               event: {
