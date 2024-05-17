@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, Image, RefreshControl, Text, View, StyleSheet } from "react-native";
 
-import images from "../../constants/Images";
-import useAPI from "../../utils/UseAPI";
-import { getAttendEvents, getHostEvents } from "../../apis/eventAPI";
+import images from "../../../constants/Images";
+import useAPI from "../../../utils/UseAPI";
+import { getAttendEvents, getHostEvents } from "../../../apis/eventAPI";
 import { getInvitations } from "@/apis/invitationAPI";
 import { IListItem, ListItems } from "@/components/ListItems";
 import EmptyState from "@/components/EmptyState";
@@ -47,10 +47,15 @@ const Events = () => {
         keyExtractor={( item: any ) => item.id}
         renderItem={({ item }) => (
           <View>
+            <Text>{item.id}</Text>
             <Card
+              id={+item.id}
               title={item.title}
+              host_by={item.host_by}
               start={item.start}
+              end={item.end}
               venue={item.venue}
+              details={item.details}
             />
           </View>
         )}
