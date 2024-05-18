@@ -38,7 +38,7 @@ const EventDetailsScreen = () => {
         Alert.alert("Delete Event", "Are you sure you want to delete this event?", [
             {
               text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
+            //   onPress: () => console.log("Cancel Pressed"),
               style: "cancel"
             },
             { text: "OK", onPress: onDeleteEvent }

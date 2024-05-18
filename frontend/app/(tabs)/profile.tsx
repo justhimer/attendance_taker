@@ -145,8 +145,14 @@ const Profile = () => {
             </View>
 
             <InfoBox
-              title={displayUser.email}
+              title={`ID: ${displayUser.id}`}
               containerStyles="mt-1"
+              titleStyles="text-lg"
+            />
+
+            <InfoBox
+              title={displayUser.email}
+              containerStyles="mt-0"
               titleStyles="text-lg"
             />
 
@@ -154,7 +160,7 @@ const Profile = () => {
               title="Username"
               value={displayUser.username}
               handleChangeText={(e: any) => setDisplayUser({ ...displayUser, username: e })}
-              otherStyles="mt-7"
+              otherStyles="mt-3"
               keyboardType="email-address"
             />
 
