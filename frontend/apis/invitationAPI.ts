@@ -1,31 +1,57 @@
 import { responseErrorMsgHandler } from '../utils/ErrorMsgHandler';
 import { endpointUrl } from './apiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getCurrentUser } from './userAPI';
+
+// export interface ICreateInvitationData {
+//   event_id: number;
+//   user_id: number;
+//   status: string;
+// }
 
 const route = 'invitations';
 
-export async function getInvitations() {
+export async function getInvitationsToMe() {
   const jwttoken = await AsyncStorage.getItem('jwttoken');
 
-  const res = await fetch(`${endpointUrl}/${route}`, {
-    // credentials: 'same-origin',
+  const me = await getCurrentUser();
+  const my_id = me.id;
+
+  const res = await fetch(`${endpointUrl}/${route}?user_id=${my_id}`, {
     method: 'GET',
     headers: {
-      // 'CSRF-Token': csrfToken,
       Authorization: `Bearer ${jwttoken}`,
     },
   });
 
   if (res.ok) {
     const result = await res.json();
-    // if (result) {
-    //     return result;
-    // }
+    if (result.data) {
+      return result.data;
+    }
+  }
+}
+
+export async function createInvitation(event_id: number, user_id: number) {
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const res = await fetch(`${endpointUrl}/${route}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwttoken}`,
+    },
+    body: JSON.stringify({
+      event_id,
+      user_id,
+      status: 'PENDING',
+    }),
+  });
+
+  if (res.ok) {
+    const result = await res.json();
     if (result.data) {
         return result.data;
     }
   }
-  
-  // const error = await responseErrorMsgHandler(res);
-  // throw new Error('Get User Failed.' + error.message);
 }

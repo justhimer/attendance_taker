@@ -30,16 +30,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="invitations"
           options={{
-            title: 'Invations',
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="contacts"
-          options={{
-            title: 'Contacts',
+            title: 'Inviations',
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
             ),

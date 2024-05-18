@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, HttpException, HttpStatus, Logger, Query } from '@nestjs/common';
 import { InvitationsService } from './invitations.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
@@ -42,8 +42,13 @@ export class InvitationsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAll(@Request() req, @Body() filter?: FilterInvitationDto) {
+  async findAll(@Request() req, @Query('event_id') event_id: string, @Query('user_id') user_id: string) {
     try {
+      const filter: FilterInvitationDto = {
+        event_id: event_id ? +event_id : undefined,
+        user_id: user_id ? +user_id : undefined,
+      };
+      
       const invitations = await this.invitationsService.findAll(req.user.id, filter);
 
       if (invitations.length === 0) {

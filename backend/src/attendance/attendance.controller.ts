@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException, HttpStatus, Logger, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException, HttpStatus, Logger, Request, Query } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Response, SuccessHttpStatus } from 'src/utils/api/Response';
+import { FilterAttendanceDto } from './dto/filter-attendance.dto';
 
 @Controller('attendance')
 export class AttendanceController {
@@ -11,8 +12,13 @@ export class AttendanceController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAllAttendance(@Request() req, @Body() filter?: any) {
+  async findAllAttendance(@Request() req, @Query('event_id') event_id: string, @Query('user_id') user_id: string) {
     try {
+      const filter: FilterAttendanceDto = {
+        event_id: event_id ? +event_id : undefined,
+        user_id: user_id ? +user_id : undefined,
+      };
+      
       const attendanceRecords = await this.attendanceService.findAllAttendance(req.user.id, filter);
 
       if (attendanceRecords.length === 0) {

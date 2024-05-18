@@ -20,7 +20,7 @@ import { createInvitation } from '@/apis/invitationAPI';
 //     details: string;
 // }
 
-const EventDetailsScreen = () => {
+const InvitationEventScreen = () => {
     const [isSubmitting, setSubmitting] = useState(false);
 
     const { 
@@ -33,52 +33,9 @@ const EventDetailsScreen = () => {
         details
     }: any = useLocalSearchParams();
 
-    const onInvite = async () => {
-        Alert.prompt('Enter User ID', 'Please enter the ID of the user you want to invite:', async (userId) => {
-            if (userId) {
-                try {
-                    const result = await createInvitation(+id, +userId); // Replace with your actual API call
-                    if (result) {
-                        Alert.alert('Success', 'Invitation sent successfully!');
-                    } else {
-                        Alert.alert('Error', 'Failed to send invitation.');
-                    }
-                } catch (error) {
-                    Alert.alert('Error', (error as Error).message);
-                }
-            }
-        });
-    };
+    const onAccept = async () => {};
+    const onReject = async () => {};
 
-    const onAttendance = async () => {};
-    const onQRCode = async () => {};
-
-    const onDelete = async () => {
-        Alert.alert("Delete Event", "Are you sure you want to delete this event?", [
-            {
-              text: "Cancel",
-            //   onPress: () => console.log("Cancel Pressed"),
-              style: "cancel"
-            },
-            { text: "OK", onPress: onDeleteEvent }
-        ]);
-    }
-
-    const onDeleteEvent = async () => {
-        setSubmitting(true);
-        try {
-          const result = await deleteEvent(id);
-          if (result) {
-            Alert.alert("Success", "Event deleted successfully");
-            router.replace("(tabs)/events/event_list");
-          }
-        } catch (error) {
-          Alert.alert("Error", (error as Error).message);
-        } finally {
-          setSubmitting(false);
-        }
-    };
-    
     return (
         <SafeAreaView className="bg-primary h-full">
             <ScrollView className='mx-4 '>
@@ -89,11 +46,6 @@ const EventDetailsScreen = () => {
                 <View className="flex justify-center items-center flex-row flex-1">
                     <View className="w-[46px] h-[46px] rounded-lg  flex justify-center items-center p-0.5">
                         <Ionicons size={28} name='calendar' style={[{ color: 'white' }]} />
-                        {/* <Image
-                            source={images.event}
-                            className="w-full h-full rounded-lg"
-                            resizeMode="cover"
-                        /> */}
                     </View>
 
                     <Text
@@ -173,44 +125,21 @@ const EventDetailsScreen = () => {
                     </View>
                 </View>
 
-                <CustomButton
-                    title="Show QR Code"
-                    handlePress={onQRCode}
-                    containerStyles="mt-5 flex-auto"
-                />
-
                 <View className="mt-4 flex flex-row w-full">
                     <CustomButton
-                        title="Invitation"
-                        handlePress={onInvite}
+                        title="Accept"
+                        handlePress={onAccept}
                         containerStyles="mt-0 flex-auto w-48 mr-4"
                     />
                     <CustomButton
-                        title="Attendance"
-                        handlePress={onAttendance}
-                        containerStyles="mt-0 flex-auto w-48"
+                        title="Reject"
+                        handlePress={onReject}
+                        containerStyles="mt-0 flex-auto w-48 bg-red-500"
                     />
                 </View>
-
-                <CustomButton
-                    title="Delete Event"
-                    handlePress={onDelete}
-                    containerStyles="mt-5 flex-auto bg-red-500"
-                    isLoading={isSubmitting}
-                />
-                
             </ScrollView>
         </SafeAreaView>
-
-        // <View>
-        //     <Stack.Screen options={{ title: `Event ${id}` }} />
-        //     <InfoBox
-        //       title={title}
-        //       containerStyles="mt-1"
-        //       titleStyles="text-lg"
-        //     />
-        // </View>
     )
 }
 
-export default EventDetailsScreen;
+export default InvitationEventScreen;

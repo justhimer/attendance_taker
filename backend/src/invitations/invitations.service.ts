@@ -99,6 +99,9 @@ export class InvitationsService {
   
       const invitations = await this.prisma.invitations.findMany({
         where: whereClause,
+        include: {
+          event: true,
+        },
       });
   
       return invitations.map(invitation => plainToClass(Invitation, invitation));

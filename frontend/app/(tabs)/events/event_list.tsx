@@ -5,10 +5,10 @@ import { FlatList, Image, RefreshControl, Text, View, StyleSheet } from "react-n
 import images from "../../../constants/Images";
 import useAPI from "../../../utils/UseAPI";
 import { getAttendEvents, getHostEvents } from "../../../apis/eventAPI";
-import { getInvitations } from "@/apis/invitationAPI";
+import { getInvitationsToMe } from "@/apis/invitationAPI";
 import { IListItem, ListItems } from "@/components/ListItems";
 import EmptyState from "@/components/EmptyState";
-import Card, { ICardData } from "@/components/Card";
+import EventCard from "@/components/EventCard";
 import { Layout, Tab, TabBar, TabView, Text as UIText } from "@ui-kitten/components";
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
@@ -53,7 +53,7 @@ const Events = () => {
         keyExtractor={( item: any ) => item.id}
         renderItem={({ item }) => (
           <View>
-            <Card
+            <EventCard
               id={+item.id}
               title={item.title}
               host_by={item.host_by}
