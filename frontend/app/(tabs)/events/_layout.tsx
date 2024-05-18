@@ -8,10 +8,24 @@ export default function EventStack() {
   return (
     <Stack>
       <Stack.Screen
-        name="index"
+        name="event_list"
         options={{
           title: 'Events',
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="event"
+        options={{
+          title: 'Event',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="create_event"
+        options={{
+          title: 'Create Event',
+          headerShown: true,
         }}
       />
     </Stack>

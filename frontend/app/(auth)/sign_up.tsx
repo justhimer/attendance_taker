@@ -27,7 +27,6 @@ const SignUp = () => {
     setSubmitting(true);
     try {
       const result = await createUser(form);
-      console.log("result: ", result);
       setUser(result);
       setIsLogged(true);
 
@@ -100,7 +99,7 @@ const SignUp = () => {
                 Have an account already?
               </Text>
               <Link
-                href="/(auth)"
+                href="sign_in"
                 className="text-lg font-psemibold text-secondary"
               >
                 Login

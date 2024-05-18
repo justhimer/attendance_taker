@@ -42,7 +42,7 @@ const Profile = () => {
     setUser(null);
     setIsLogged(false);
 
-    router.replace("/(auth)");
+    router.replace("(auth)/sign_in");
   };
 
   const changeUsername = async () => {

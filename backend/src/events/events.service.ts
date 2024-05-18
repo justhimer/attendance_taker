@@ -141,6 +141,10 @@ export class EventsService {
         where: {
           id,
         },
+        include: {
+          invitations: true,
+          attendance: true,
+        },
       });
     } catch (error) {
       throw new Error(error);

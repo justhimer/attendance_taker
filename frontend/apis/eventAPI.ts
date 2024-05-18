@@ -4,6 +4,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const route = 'events';
 
+export async function createEvent(data: any) {
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const res = await fetch(`${endpointUrl}/${route}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwttoken}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    if (result.data) {
+        return result.data;
+    }
+  }
+}
+
 export async function getHostEvents() {
   const jwttoken = await AsyncStorage.getItem('jwttoken');
 
@@ -72,6 +92,24 @@ export async function getAttendEvent(id: number) {
     method: 'GET',
     headers: {
       // 'CSRF-Token': csrfToken,
+      Authorization: `Bearer ${jwttoken}`,
+    },
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    if (result.data) {
+        return result.data;
+    }
+  }
+}
+
+export async function deleteEvent(id: number) {
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const res = await fetch(`${endpointUrl}/${route}/${id}`, {
+    method: 'DELETE',
+    headers: {
       Authorization: `Bearer ${jwttoken}`,
     },
   });

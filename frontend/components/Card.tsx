@@ -21,8 +21,9 @@ const Card = (data: ICardData) => {
   return (
     <Link
         href={{
-          pathname: `(tabs)/events/${data.id}`,
+          pathname: `(tabs)/events/event`,
           params: {
+            id: data.id,
             title: data.title,
             host_by: data.host_by,
             start: data.start,
@@ -49,7 +50,7 @@ const Card = (data: ICardData) => {
                   className="text-xs text-yellow-500 font-pregular"
                   numberOfLines={1}
               >
-                  {dateFormat(data.start, 'yyyy-MM-dd HH:mm:ss')}
+                  {dateFormat(data.start, 'yyyy-MM-dd')}
               </Text>
               <Text
                 className="font-psemibold text-sm text-white"
@@ -70,39 +71,6 @@ const Card = (data: ICardData) => {
             <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
           </View>
         </View>
-
-        {/* {play ? (
-          <Video
-            source={{ uri: video }}
-            className="w-full h-60 rounded-xl mt-3"
-            resizeMode={ResizeMode.CONTAIN}
-            useNativeControls
-            shouldPlay
-            onPlaybackStatusUpdate={(status) => {
-              if (status.didJustFinish) {
-                setPlay(false);
-              }
-            }}
-          />
-        ) : (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => setPlay(true)}
-            className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
-          >
-            <Image
-              source={{ uri: thumbnail }}
-              className="w-full h-full rounded-xl mt-3"
-              resizeMode="cover"
-            />
-
-            <Image
-              source={icons.play}
-              className="w-12 h-12 absolute"
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        )} */}
       </Pressable>
     </Link>
   );

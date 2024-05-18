@@ -10,6 +10,8 @@ import { IListItem, ListItems } from "@/components/ListItems";
 import EmptyState from "@/components/EmptyState";
 import Card, { ICardData } from "@/components/Card";
 import { Layout, Tab, TabBar, TabView, Text as UIText } from "@ui-kitten/components";
+import CustomButton from "@/components/CustomButton";
+import { router } from "expo-router";
 // import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
 
 const Events = () => {
@@ -29,6 +31,10 @@ const Events = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const onCreateEvent = () => {
+    router.push("(tabs)/events/create_event");
+  }
+
   // useEffect(() => {
   //   if (events) {
   //     const items = events.map((event: any) => ({
@@ -47,7 +53,6 @@ const Events = () => {
         keyExtractor={( item: any ) => item.id}
         renderItem={({ item }) => (
           <View>
-            <Text>{item.id}</Text>
             <Card
               id={+item.id}
               title={item.title}
@@ -75,18 +80,17 @@ const Events = () => {
               <Tab title='I HOST' />
               <Tab title='I ATTEND' />
             </TabBar>
-
-            {/* <SearchInput /> */}
-
-            {/* <View className="w-full flex-1 pt-5 pb-8">
-              <Text className="text-lg font-pregular text-gray-100 mb-3">
-                Latest Videos
-              </Text>
-
-              <Trending posts={latestPosts ?? []} />
-            </View> */}
           </View>
         )}
+        ListFooterComponent={() => selectedIndex === 0 ? (
+          <View className="mt-2 mx-4">
+            <CustomButton
+              title="Create Event"
+              handlePress={onCreateEvent}
+              containerStyles="mt-7"
+            />
+          </View>
+        ) : <></>} 
         ListEmptyComponent={() => (
           <EmptyState
             title="No Events Found"

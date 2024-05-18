@@ -34,7 +34,7 @@ model Users {
 model Events {
   id          Int           @id @default(autoincrement())
   hosted_by   Int           @db.Integer
-  user        Users         @relation(fields: [hosted_by], references: [id])
+  user        Users         @relation(fields: [hosted_by], references: [id], onDelete: Cascade)
   title       String        @db.Text
   start       DateTime      @db.Timestamptz
   end         DateTime      @db.Timestamptz
@@ -49,9 +49,9 @@ model Events {
 model Attendance {
   id            Int        @id @default(autoincrement())
   user_id       Int        @db.Integer
-  user          Users      @relation(fields: [user_id], references: [id])
+  user          Users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   event_id      Int        @db.Integer
-  event         Events     @relation(fields: [event_id], references: [id])
+  event         Events     @relation(fields: [event_id], references: [id], onDelete: Cascade)
   attend_time   DateTime?  @db.Timestamptz
   late_reason   String?    @db.Text
   absent_reason String?    @db.Text
@@ -62,9 +62,9 @@ model Attendance {
 model Invitations {
   id          Int      @id @default(autoincrement())
   event_id    Int      @db.Integer
-  event       Events   @relation(fields: [event_id], references: [id])
+  event       Events   @relation(fields: [event_id], references: [id], onDelete: Cascade)
   user_id     Int      @db.Integer
-  user        Users    @relation(fields: [user_id], references: [id])
+  user        Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   status      AcceptanceStatus @default(PENDING)
   created_at  DateTime @default(now()) @db.Timestamptz
   updated_at  DateTime @updatedAt @db.Timestamptz
@@ -73,9 +73,9 @@ model Invitations {
 model Contacts {
   id          Int      @id @default(autoincrement())
   user_id     Int      @db.Integer
-  user        Users    @relation("contact_user", fields: [user_id], references: [id])
+  user        Users    @relation("contact_user", fields: [user_id], references: [id], onDelete: Cascade)
   contact_id  Int      @db.Integer
-  contact     Users    @relation("contact_contact", fields: [contact_id], references: [id])
+  contact     Users    @relation("contact_contact", fields: [contact_id], references: [id], onDelete: Cascade)
   created_at  DateTime @default(now()) @db.Timestamptz
   updated_at  DateTime @updatedAt @db.Timestamptz
 }
