@@ -96,6 +96,10 @@ export class InvitationsService {
       if (filter?.event_id) {
         whereClause.event_id = filter.event_id;
       }
+
+      if (filter?.status) {
+        whereClause.status = filter.status;
+      }
   
       const invitations = await this.prisma.invitations.findMany({
         where: whereClause,

@@ -42,11 +42,17 @@ export class InvitationsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAll(@Request() req, @Query('event_id') event_id: string, @Query('user_id') user_id: string) {
+  async findAll(
+    @Request() req, 
+    @Query('event_id') event_id: string, 
+    @Query('user_id') user_id: string,
+    @Query('status') status: AcceptanceStatus
+  ) {
     try {
       const filter: FilterInvitationDto = {
         event_id: event_id ? +event_id : undefined,
         user_id: user_id ? +user_id : undefined,
+        status: status ? status : undefined,
       };
       
       const invitations = await this.invitationsService.findAll(req.user.id, filter);

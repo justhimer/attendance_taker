@@ -10,7 +10,7 @@ import { format as dateFormat, parseISO } from 'date-fns';
 export interface IEventCardData {
   id: number;
   title: string;
-  host_by: string;
+  hosted_by: string;
   start: string;
   end: string;
   venue: string;
@@ -25,7 +25,7 @@ const EventCard = (data: IEventCardData) => {
           params: {
             id: data.id,
             title: data.title,
-            host_by: data.host_by,
+            hosted_by: data.hosted_by,
             start: data.start,
             end: data.end,
             venue: data.venue,

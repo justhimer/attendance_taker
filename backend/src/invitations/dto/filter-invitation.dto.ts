@@ -1,4 +1,5 @@
-import { IsInt, IsOptional } from "class-validator";
+import { IsEnum, IsInt, IsOptional } from "class-validator";
+import { AcceptanceStatus } from "../entities/invitation.entity";
 
 export class FilterInvitationDto {
     @IsOptional()
@@ -8,4 +9,8 @@ export class FilterInvitationDto {
     @IsOptional()
     @IsInt()
     user_id: number;
+
+    @IsOptional()
+    @IsEnum(AcceptanceStatus)
+    status: AcceptanceStatus;
 }

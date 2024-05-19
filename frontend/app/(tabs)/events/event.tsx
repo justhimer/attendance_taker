@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, ScrollView, TextInput, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Stack, router, useLocalSearchParams } from 'expo-router'
 import InfoBox from '@/components/InfoBox';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import CustomButton from '@/components/CustomButton';
 import { deleteEvent } from '@/apis/eventAPI';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { createInvitation } from '@/apis/invitationAPI';
+import { getMyAttendance } from '@/apis/attendanceAPI';
 
 // export interface IEventData {
 //     title: string;
@@ -21,17 +22,44 @@ import { createInvitation } from '@/apis/invitationAPI';
 // }
 
 const EventDetailsScreen = () => {
-    const [isSubmitting, setSubmitting] = useState(false);
+    const { user } = useGlobalContext();
+    const [ isSubmitting, setSubmitting ] = useState(false);
+    const [ myAttendStatus, setMyAttendStatus ] = useState('');
 
     const { 
         id, 
         title,
-        host_by,
+        hosted_by,
         start,
         end,
         venue,
         details
     }: any = useLocalSearchParams();
+
+    const fetchMyAttendance = async () => {
+        const attendance = await getMyAttendance(+id);
+        if (attendance) {
+            const time = (attendance as any).attend_time;
+            if (time === null) {
+                if (new Date() < parseISO(end)) {
+                    setMyAttendStatus('Pending');
+                } else {
+                    setMyAttendStatus('Absent');
+                }
+            } else {
+                const attendDateTime = new Date(time);
+                const attendedOrLate = attendDateTime > parseISO(end) ? 'Attended(Late)' : 'Attended(On Time)';
+                const formattedDateTime = dateFormat(attendDateTime, 'yyyy-MM-dd HH:mm:ss');
+                setMyAttendStatus(`${attendedOrLate}: ${formattedDateTime}`);
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (hosted_by != user?.id) {
+            fetchMyAttendance();
+        }
+    }, []);
 
     const onInvite = async () => {
         Alert.prompt('Enter User ID', 'Please enter the ID of the user you want to invite:', async (userId) => {
@@ -51,13 +79,14 @@ const EventDetailsScreen = () => {
     };
 
     const onAttendance = async () => {};
-    const onQRCode = async () => {};
+    const onShowQRCode = async () => {};
+    const onScanQRCode = async () => {};
 
     const onDelete = async () => {
         Alert.alert("Delete Event", "Are you sure you want to delete this event?", [
             {
               text: "Cancel",
-            //   onPress: () => console.log("Cancel Pressed"),
+              // onPress: () => console.log("Cancel Pressed"),
               style: "cancel"
             },
             { text: "OK", onPress: onDeleteEvent }
@@ -173,43 +202,64 @@ const EventDetailsScreen = () => {
                     </View>
                 </View>
 
-                <CustomButton
-                    title="Show QR Code"
-                    handlePress={onQRCode}
-                    containerStyles="mt-5 flex-auto"
-                />
+                { hosted_by == user?.id ? (
+                    <View>
+                        <CustomButton
+                            title="Show QR Code"
+                            handlePress={onShowQRCode}
+                            containerStyles="mt-5 flex-auto"
+                        />
 
-                <View className="mt-4 flex flex-row w-full">
-                    <CustomButton
-                        title="Invitation"
-                        handlePress={onInvite}
-                        containerStyles="mt-0 flex-auto w-48 mr-4"
-                    />
-                    <CustomButton
-                        title="Attendance"
-                        handlePress={onAttendance}
-                        containerStyles="mt-0 flex-auto w-48"
-                    />
-                </View>
+                        <View className="mt-4 flex flex-row w-full">
+                            <CustomButton
+                                title="Invitation"
+                                handlePress={onInvite}
+                                containerStyles="mt-0 flex-auto w-48 mr-4"
+                            />
+                            <CustomButton
+                                title="Attendance"
+                                handlePress={onAttendance}
+                                containerStyles="mt-0 flex-auto w-48"
+                            />
+                        </View>
 
-                <CustomButton
-                    title="Delete Event"
-                    handlePress={onDelete}
-                    containerStyles="mt-5 flex-auto bg-red-500"
-                    isLoading={isSubmitting}
-                />
+                        <CustomButton
+                            title="Delete Event"
+                            handlePress={onDelete}
+                            containerStyles="mt-5 flex-auto bg-red-500"
+                            isLoading={isSubmitting}
+                        />
+                    </View>
+                ) : (
+                    <View>
+                        <View className={`space-y-2 mt-2`}>
+                            <Text className="text-base text-gray-100 font-pmedium">My Attendence</Text>
+
+                            <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 flex flex-row items-center">
+                                <TextInput editable={false} multiline value={myAttendStatus} className="text-white font-psemibold text-base" />
+                            </View>
+                        </View>
+
+                        <CustomButton
+                            title="Scan QR Code"
+                            handlePress={onScanQRCode}
+                            containerStyles="mt-5 flex-auto"
+                        />
+
+                        {/* { 
+                            myAttendStatus !== "Absent" ? (
+                                <CustomButton
+                                    title="Scan QR Code"
+                                    handlePress={onScanQRCode}
+                                    containerStyles="mt-5 flex-auto"
+                                />
+                            ) : null
+                        } */}
+                    </View>
+                )}
                 
             </ScrollView>
         </SafeAreaView>
-
-        // <View>
-        //     <Stack.Screen options={{ title: `Event ${id}` }} />
-        //     <InfoBox
-        //       title={title}
-        //       containerStyles="mt-1"
-        //       titleStyles="text-lg"
-        //     />
-        // </View>
     )
 }
 

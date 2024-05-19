@@ -5,15 +5,24 @@ import React from 'react';
 import icons from '@/constants/Icons';
 import images from '@/constants/Images';
 import { format as dateFormat, parseISO } from 'date-fns';
-import { IEventCardData } from "./EventCard";
 
-const InvitationCard = (data: IEventCardData) => {
+export interface IInvitationCardData {
+  invitation_id: number;
+  title: string;
+  host_by: string;
+  start: string;
+  end: string;
+  venue: string;
+  details: string;
+}
+
+const InvitationCard = (data: IInvitationCardData) => {
   return (
     <Link
         href={{
           pathname: `(tabs)/invitations/invitation`,
           params: {
-            id: data.id,
+            invitation_id: data.invitation_id,
             title: data.title,
             host_by: data.host_by,
             start: data.start,

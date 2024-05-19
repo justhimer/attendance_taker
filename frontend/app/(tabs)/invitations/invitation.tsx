@@ -9,7 +9,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import CustomButton from '@/components/CustomButton';
 import { deleteEvent } from '@/apis/eventAPI';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import { createInvitation } from '@/apis/invitationAPI';
+import { InvitationStatus, createInvitation, updateInvitation } from '@/apis/invitationAPI';
 
 // export interface IEventData {
 //     title: string;
@@ -24,7 +24,7 @@ const InvitationEventScreen = () => {
     const [isSubmitting, setSubmitting] = useState(false);
 
     const { 
-        id, 
+        invitation_id,
         title,
         host_by,
         start,
@@ -33,8 +33,59 @@ const InvitationEventScreen = () => {
         details
     }: any = useLocalSearchParams();
 
-    const onAccept = async () => {};
-    const onReject = async () => {};
+    const onAccept = async () => {
+        Alert.alert("Accept Invitation", "Are you sure you want to accept this invitation?", [
+            {
+                text: "Cancel",
+                style: "cancel"
+            },
+            { text: "OK", onPress: onAcceptInvitation }
+        ]);
+    }
+
+    const onReject = async () => {
+        Alert.alert("Reject Invitation", "Are you sure you want to reject this invitation?", [
+            {
+                text: "Cancel",
+                style: "cancel"
+            },
+            { text: "OK", onPress: onRejectInvitation }
+        ]);
+    }
+
+    const onAcceptInvitation = async () => {
+        setSubmitting(true);
+        try {
+            const res = await updateInvitation(invitation_id, InvitationStatus.ACCEPTED);
+
+            if (res) {
+                Alert.alert('Success', 'Invitation accepted successfully');
+                router.replace('(tabs)/invitations/invitation_list');
+            }
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Error', 'An error occurred while accepting invitation');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const onRejectInvitation = async () => {
+        setSubmitting(true);
+        try {
+            const res = await updateInvitation(invitation_id, InvitationStatus.REJECTED);
+
+            if (res) {
+                Alert.alert('Success', 'Invitation rejected.');
+                router.replace('(tabs)/events/event_list');
+            }
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Error', 'An error occurred while rejecting invitation');
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     return (
         <SafeAreaView className="bg-primary h-full">

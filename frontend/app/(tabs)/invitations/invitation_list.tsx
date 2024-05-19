@@ -26,7 +26,7 @@ const Invitations = () => {
         renderItem={({ item }) => (
           <View>
             <InvitationCard
-              id={+item.event.id}
+              invitation_id={+item.id}
               title={item.event.title}
               host_by={item.event.host_by}
               start={item.event.start}

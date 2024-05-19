@@ -56,7 +56,7 @@ const Events = () => {
             <EventCard
               id={+item.id}
               title={item.title}
-              host_by={item.host_by}
+              hosted_by={item.hosted_by}
               start={item.start}
               end={item.end}
               venue={item.venue}
