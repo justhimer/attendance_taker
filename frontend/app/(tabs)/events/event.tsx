@@ -79,14 +79,19 @@ const EventDetailsScreen = () => {
     };
 
     const onAttendance = async () => {};
-    const onShowQRCode = async () => {};
-    const onScanQRCode = async () => {};
+    
+    const onShowQRCode = async () => {
+        router.push({ pathname: "(tabs)/events/show_qr", params: {id} })
+    };
+
+    const onScanQRCode = async () => {
+        router.push("(tabs)/events/scan_qr");
+    };
 
     const onDelete = async () => {
         Alert.alert("Delete Event", "Are you sure you want to delete this event?", [
             {
               text: "Cancel",
-              // onPress: () => console.log("Cancel Pressed"),
               style: "cancel"
             },
             { text: "OK", onPress: onDeleteEvent }

@@ -28,6 +28,20 @@ export default function EventStack() {
           headerShown: true,
         }}
       />
+      <Stack.Screen
+        name="show_qr"
+        options={{
+          title: 'Show QR',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="scan_qr"
+        options={{
+          title: 'Scan QR',
+          headerShown: true,
+        }}
+      />
     </Stack>
   )
 }
