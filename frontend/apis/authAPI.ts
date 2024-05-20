@@ -10,7 +10,7 @@ interface ISignInData {
 const route = 'auth';
 
 export async function signIn(loginData: ISignInData) {
-  const json = JSON.stringify(loginData);
+  // const json = JSON.stringify(loginData);
   const res = await fetch(`${endpointUrl}/${route}/login`, {
     method: 'POST',
     body: JSON.stringify(loginData),

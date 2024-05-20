@@ -34,7 +34,9 @@ export default function ScanQR() {
         }}
         onBarcodeScanned={(data: BarcodeScanningResult) => {
             const { type, data: scannedData } = data;
-            console.log(scannedData);
+            const { id, title, time }: any = JSON.parse(scannedData);
+            const parseTime = new Date(time);
+            console.log(`id = ${id}, title = ${title}, time = ${parseTime}`);
         }}
       >
         <View style={styles.buttonContainer}>

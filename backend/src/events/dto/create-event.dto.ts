@@ -3,6 +3,7 @@ import { Event } from "../entities/event.entity";
 
 export class CreateEventDto extends OmitType(Event, [
     'id', 
+    'qr_uuid',
     'created_at', 
     'updated_at'
 ]) { }

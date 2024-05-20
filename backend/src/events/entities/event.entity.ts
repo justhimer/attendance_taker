@@ -29,6 +29,10 @@ export class Event {
     @IsString()
     details?: string;
 
+    @IsOptional()
+    @IsString()
+    qr_uuid?: string;
+
     @IsNotEmpty()
     @IsDate()
     created_at: Date;

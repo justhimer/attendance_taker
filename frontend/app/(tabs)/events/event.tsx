@@ -81,7 +81,7 @@ const EventDetailsScreen = () => {
     const onAttendance = async () => {};
     
     const onShowQRCode = async () => {
-        router.push({ pathname: "(tabs)/events/show_qr", params: {id} })
+        router.push({ pathname: "(tabs)/events/show_qr", params: {id, title} })
     };
 
     const onScanQRCode = async () => {

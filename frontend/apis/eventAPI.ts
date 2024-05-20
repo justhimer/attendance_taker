@@ -104,6 +104,26 @@ export async function getAttendEvent(id: number) {
   }
 }
 
+export async function patchEvent(id: number, data: any) {
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const res = await fetch(`${endpointUrl}/${route}/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwttoken}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    if (result.data) {
+        return result.data;
+    }
+  }
+}
+
 export async function deleteEvent(id: number) {
   const jwttoken = await AsyncStorage.getItem('jwttoken');
 
