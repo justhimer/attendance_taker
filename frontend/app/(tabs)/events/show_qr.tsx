@@ -7,6 +7,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { patchEvent } from '@/apis/eventAPI';
 import * as Crypto from 'expo-crypto';
 
+export interface QRCodeData {
+    event_id: number;
+    uuid: string;
+}
+
 const ShowQR = () => {
     const { id, title }: any = useLocalSearchParams();
     const [qrCodeValue, setQRCodeValue] = useState('none');
@@ -19,12 +24,12 @@ const ShowQR = () => {
     const generateQRCodeValue = async () => {
         const newUUID = generateRandomUUID();
         await patchEvent(id, { qr_uuid: newUUID });
-        // console.log(`Updated QR code ID to ${newUUID}`);
-        return JSON.stringify({
-            id: id,
-            title: title,
+        
+        const qrCodeValue: QRCodeData = {
+            event_id: id,
             uuid: newUUID
-        });
+        };
+        return JSON.stringify(qrCodeValue);
     };
 
     const getQRCodeValue = async () => {

@@ -24,6 +24,7 @@ import { getMyAttendance } from '@/apis/attendanceAPI';
 const EventDetailsScreen = () => {
     const { user } = useGlobalContext();
     const [ isSubmitting, setSubmitting ] = useState(false);
+    const [ myAttendanceId, setMyAttendanceId ] = useState(0);
     const [ myAttendStatus, setMyAttendStatus ] = useState('');
 
     const { 
@@ -39,6 +40,9 @@ const EventDetailsScreen = () => {
     const fetchMyAttendance = async () => {
         const attendance = await getMyAttendance(+id);
         if (attendance) {
+            const attendanceId = (attendance as any).id;
+            setMyAttendanceId(attendanceId);
+
             const time = (attendance as any).attend_time;
             if (time === null) {
                 if (new Date() < parseISO(end)) {
@@ -85,7 +89,7 @@ const EventDetailsScreen = () => {
     };
 
     const onScanQRCode = async () => {
-        router.push("(tabs)/events/scan_qr");
+        router.push({ pathname: "(tabs)/events/scan_qr", params: {event_id: id, myAttendanceId} })
     };
 
     const onDelete = async () => {

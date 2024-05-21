@@ -29,6 +29,28 @@ export async function getMyAttendance(eventId: number) {
   }
 }
 
+export async function patchAttendance(attendanceId: number, data: any) {
+  console.log('attendanceId', attendanceId);
+  console.log('data', data);
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const res = await fetch(`${endpointUrl}/${route}/${attendanceId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwttoken}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    if (result.data) {
+      return result.data;
+    }
+  }
+}
+
 // export async function getSingleAttendance(id: number) {
 //   const jwttoken = await AsyncStorage.getItem('jwttoken');
 

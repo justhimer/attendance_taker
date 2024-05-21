@@ -1,9 +1,15 @@
+import { patchAttendance } from '@/apis/attendanceAPI';
 import { BarcodeScanningResult, CameraView, useCameraPermissions } from 'expo-camera';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { QRCodeData } from './show_qr';
+import { getAttendEvent } from '@/apis/eventAPI';
 
 export default function ScanQR() {
-//   const [facing, setFacing] = useState('back');
+  const { event_id, myAttendanceId }: any = useLocalSearchParams();
+  // const [latestQRUUID, setLatestQRUUID] = useState('none');
+  
   const [permission, requestPermission] = useCameraPermissions();
 
   if (!permission) {
@@ -21,9 +27,26 @@ export default function ScanQR() {
     );
   }
 
-//   function toggleCameraFacing() {
-//     setFacing(current => (current === 'back' ? 'front' : 'back'));
-//   }
+  async function checkIfQRCodeValid(qrCodeData: QRCodeData) {
+    const eventData = await getAttendEvent(event_id);
+    const uuid = eventData.qr_uuid;
+    // console.log('uuid', uuid);
+    // console.log('qrCodeData.uuid', qrCodeData.uuid);
+    return qrCodeData.uuid === uuid;
+  }
+
+  async function patchMyAttendance() {
+    await patchAttendance(myAttendanceId, { attend_time: new Date() });
+  }
+
+  async function onQRCodeReceived(data: QRCodeData) {
+    const isValid = await checkIfQRCodeValid(data);
+    if (isValid) {
+      await patchMyAttendance();
+      Alert.alert('Attendance Success', 'You have successfully attended the event');
+      router.replace('(tabs)/events/event_list');
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -32,11 +55,10 @@ export default function ScanQR() {
         barcodeScannerSettings={{
             barcodeTypes: ["qr"],
         }}
-        onBarcodeScanned={(data: BarcodeScanningResult) => {
-            const { type, data: scannedData } = data;
-            const { id, title, time }: any = JSON.parse(scannedData);
-            const parseTime = new Date(time);
-            console.log(`id = ${id}, title = ${title}, time = ${parseTime}`);
+        onBarcodeScanned={async (scannedData: BarcodeScanningResult) => {
+            const { type, data } = scannedData;
+            const qrCodeData: QRCodeData = JSON.parse(data);
+            await onQRCodeReceived(qrCodeData);
         }}
       >
         <View style={styles.buttonContainer}>
