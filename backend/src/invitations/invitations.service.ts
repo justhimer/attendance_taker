@@ -23,17 +23,22 @@ export class InvitationsService {
   ): Promise<{ id: number }>{
     try {
       const result = await this.prisma.$transaction(async (tx) => {
-        // check if the event exists
         const event = await tx.events.findFirst({
           where: {
             id: createInvitationDto.event_id
           },
         });
+        // check if the event exists
         if (!event) {
           throw this.createErrorMessages.NOT_FOUND;
         }
+        // check if the inviter is the host
         if (event.hosted_by !== inviterId) {
           throw this.createErrorMessages.UNAUTHORIZED;
+        }
+        // check if the invitee is the host
+        if (event.hosted_by === createInvitationDto.user_id) {
+          throw new HttpException('You cannot invite yourself.', HttpStatus.BAD_REQUEST);
         }
 
         // check if the invitation is created for an existing user
