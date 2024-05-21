@@ -250,6 +250,12 @@ const EventDetailsScreen = () => {
                         </View>
 
                         <CustomButton
+                            title="Refresh Attendance"
+                            handlePress={fetchMyAttendance}
+                            containerStyles="mt-5 flex-auto"
+                        />
+
+                        <CustomButton
                             title="Scan QR Code"
                             handlePress={onScanQRCode}
                             containerStyles="mt-5 flex-auto"
