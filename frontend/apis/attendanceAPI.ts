@@ -1,9 +1,26 @@
-import { responseErrorMsgHandler } from '../utils/ErrorMsgHandler';
 import { endpointUrl } from './apiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getCurrentUser } from './userAPI';
 
 const route = 'attendance';
+
+export async function getAttendanceList(eventId: number) {
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const res = await fetch(`${endpointUrl}/${route}?event_id=${eventId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${jwttoken}`,
+    },
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    if (result.data) {
+      return result.data;
+    }
+  }
+}
 
 export async function getMyAttendance(eventId: number) {
   const jwttoken = await AsyncStorage.getItem('jwttoken');
