@@ -71,10 +71,10 @@ export class EventsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/host/:id')
+  @Get('/:id')
   async findEvent(@Request() req, @Param('id') eventId: string) {
     try {
-      const event = await this.eventsService.findHostEvent(+eventId, req.user.id);
+      const event = await this.eventsService.findEvent(+eventId);
       if (!event) {
         throw new HttpException('Event not found or you are not authorized to view this event', HttpStatus.NOT_FOUND);
       }
@@ -85,35 +85,50 @@ export class EventsController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('/attend/:id')
-  async findAttendEvent(@Request() req, @Param('id') eventId: string) {
-    try {
-      const event = await this.eventsService.findAttendEvent(+eventId, req.user.id);
-      if (!event) {
-        throw new HttpException('Event not found or you are not authorized to view this event', HttpStatus.NOT_FOUND);
-      }
-      return new Response(SuccessHttpStatus.OK, event);
-    } catch (error) {
-      Logger.error(error.message);
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('/host/:id')
+  // async findHostEvent(@Request() req, @Param('id') eventId: string) {
+  //   try {
+  //     const event = await this.eventsService.findHostEvent(+eventId, req.user.id);
+  //     if (!event) {
+  //       throw new HttpException('Event not found or you are not authorized to view this event', HttpStatus.NOT_FOUND);
+  //     }
+  //     return new Response(SuccessHttpStatus.OK, event);
+  //   } catch (error) {
+  //     Logger.error(error.message);
+  //     throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
+
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('/attend/:id')
+  // async findAttendEvent(@Request() req, @Param('id') eventId: string) {
+  //   try {
+  //     const event = await this.eventsService.findAttendEvent(+eventId, req.user.id);
+  //     if (!event) {
+  //       throw new HttpException('Event not found or you are not authorized to view this event', HttpStatus.NOT_FOUND);
+  //     }
+  //     return new Response(SuccessHttpStatus.OK, event);
+  //   } catch (error) {
+  //     Logger.error(error.message);
+  //     throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   async update(@Request() req, @Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
     try {
       // check if event exists
-      const event = await this.eventsService.findHostEvent(+id, req.user.id);
+      const event = await this.eventsService.findEvent(+id);
       if (!event) {
         throw new HttpException('Event not found or you are not authorized to update this event', HttpStatus.NOT_FOUND);
       }
 
-      // // check if the event is hosted by the user
-      // if (event.hosted_by !== req.user.id) {
-      //   throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-      // }
+      // check if the event is hosted by the user
+      if (event.hosted_by !== req.user.id) {
+        throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      }
 
       const updatedEvent = await this.eventsService.update(+id, updateEventDto);
       
@@ -129,7 +144,7 @@ export class EventsController {
   async remove(@Request() req, @Param('id') id: string) {
     try {
       // check if event exists
-      const event = await this.eventsService.findHostEvent(+id, req.user.id);
+      const event = await this.eventsService.findEvent(+id);
       if (!event) {
         throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
       }

@@ -13,7 +13,7 @@ export interface QRCodeData {
 }
 
 const ShowQR = () => {
-    const { id, title }: any = useLocalSearchParams();
+    const { id }: any = useLocalSearchParams();
     const [qrCodeValue, setQRCodeValue] = useState('none');
     const [isToggled, setIsToggled] = useState(false);
 

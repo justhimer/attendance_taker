@@ -71,12 +71,11 @@ export class EventsService {
     }
   }
 
-  async findHostEvent(id: number, hostId: number): Promise<Event> {
+  async findEvent(id: number): Promise<Event> {
     try {
-      const event = await this.prisma.events.findFirst({
+      const event = await this.prisma.events.findUnique({
         where: {
           id,
-          hosted_by: hostId,
         },
       });
 
@@ -91,29 +90,49 @@ export class EventsService {
     }
   }
 
-  async findAttendEvent(id: number, attendeeId: number): Promise<Event> {
-    try {
-      const event = await this.prisma.events.findFirst({
-        where: {
-          id,
-          attendance: {
-            some: {
-              user_id: attendeeId,
-            },
-          },
-        },
-      });
+  // async findHostEvent(id: number, hostId: number): Promise<Event> {
+  //   try {
+  //     const event = await this.prisma.events.findFirst({
+  //       where: {
+  //         id,
+  //         hosted_by: hostId,
+  //       },
+  //     });
 
-      let returnEvent: Event = null;
-      if (event) {
-        returnEvent = plainToClass(Event, event);
-      }
+  //     let returnEvent: Event = null;
+  //     if (event) {
+  //       returnEvent = plainToClass(Event, event);
+  //     }
   
-      return returnEvent;
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
+  //     return returnEvent;
+  //   } catch (error) {
+  //     throw new Error(error);
+  //   }
+  // }
+
+  // async findAttendEvent(id: number, attendeeId: number): Promise<Event> {
+  //   try {
+  //     const event = await this.prisma.events.findFirst({
+  //       where: {
+  //         id,
+  //         attendance: {
+  //           some: {
+  //             user_id: attendeeId,
+  //           },
+  //         },
+  //       },
+  //     });
+
+  //     let returnEvent: Event = null;
+  //     if (event) {
+  //       returnEvent = plainToClass(Event, event);
+  //     }
+  
+  //     return returnEvent;
+  //   } catch (error) {
+  //     throw new Error(error);
+  //   }
+  // }
 
   async update(id: number, updateEventDto: UpdateEventDto) {
     try {

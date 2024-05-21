@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { QRCodeData } from './show_qr';
-import { getAttendEvent } from '@/apis/eventAPI';
+import { getEvent } from '@/apis/eventAPI';
 
 export default function ScanQR() {
   const { event_id, myAttendanceId }: any = useLocalSearchParams();
@@ -27,11 +27,8 @@ export default function ScanQR() {
     );
   }
 
-  async function checkIfQRCodeValid(qrCodeData: QRCodeData) {
-    const eventData = await getAttendEvent(event_id);
+  async function checkIfQRCodeValid(qrCodeData: QRCodeData, eventData: any) {
     const uuid = eventData.qr_uuid;
-    // console.log('uuid', uuid);
-    // console.log('qrCodeData.uuid', qrCodeData.uuid);
     return qrCodeData.uuid === uuid;
   }
 
@@ -40,10 +37,17 @@ export default function ScanQR() {
   }
 
   async function onQRCodeReceived(data: QRCodeData) {
-    const isValid = await checkIfQRCodeValid(data);
-    if (isValid) {
+    const eventData = await getEvent(event_id);
+
+    if (eventData.attend_time) {
+      Alert.alert('Attend Failed', 'You have already attended the event');
+      router.replace('(tabs)/events/event_list');
+    }
+
+    const isQRCodeValid = await checkIfQRCodeValid(data, eventData);
+    if (isQRCodeValid) {
       await patchMyAttendance();
-      Alert.alert('Attendance Success', 'You have successfully attended the event');
+      Alert.alert('Attend Success', 'You have successfully attended the event');
       router.replace('(tabs)/events/event_list');
     }
   }

@@ -64,10 +64,10 @@ export async function getAttendEvents() {
   }
 }
 
-export async function getHostEvent(id: number) {
+export async function getEvent(id: number) {
   const jwttoken = await AsyncStorage.getItem('jwttoken');
 
-  const res = await fetch(`${endpointUrl}/${route}/host/${id}`, {
+  const res = await fetch(`${endpointUrl}/${route}/${id}`, {
     // credentials: 'same-origin',
     method: 'GET',
     headers: {
@@ -84,25 +84,45 @@ export async function getHostEvent(id: number) {
   }
 }
 
-export async function getAttendEvent(id: number) {
-  const jwttoken = await AsyncStorage.getItem('jwttoken');
+// export async function getHostEvent(id: number) {
+//   const jwttoken = await AsyncStorage.getItem('jwttoken');
 
-  const res = await fetch(`${endpointUrl}/${route}/attend/${id}`, {
-    // credentials: 'same-origin',
-    method: 'GET',
-    headers: {
-      // 'CSRF-Token': csrfToken,
-      Authorization: `Bearer ${jwttoken}`,
-    },
-  });
+//   const res = await fetch(`${endpointUrl}/${route}/host/${id}`, {
+//     // credentials: 'same-origin',
+//     method: 'GET',
+//     headers: {
+//       // 'CSRF-Token': csrfToken,
+//       Authorization: `Bearer ${jwttoken}`,
+//     },
+//   });
 
-  if (res.ok) {
-    const result = await res.json();
-    if (result.data) {
-        return result.data;
-    }
-  }
-}
+//   if (res.ok) {
+//     const result = await res.json();
+//     if (result.data) {
+//         return result.data;
+//     }
+//   }
+// }
+
+// export async function getAttendEvent(id: number) {
+//   const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+//   const res = await fetch(`${endpointUrl}/${route}/attend/${id}`, {
+//     // credentials: 'same-origin',
+//     method: 'GET',
+//     headers: {
+//       // 'CSRF-Token': csrfToken,
+//       Authorization: `Bearer ${jwttoken}`,
+//     },
+//   });
+
+//   if (res.ok) {
+//     const result = await res.json();
+//     if (result.data) {
+//         return result.data;
+//     }
+//   }
+// }
 
 export async function patchEvent(id: number, data: any) {
   const jwttoken = await AsyncStorage.getItem('jwttoken');
