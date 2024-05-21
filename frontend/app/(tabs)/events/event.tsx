@@ -82,7 +82,9 @@ const EventDetailsScreen = () => {
         });
     };
 
-    const onAttendance = async () => {};
+    const onAttendance = async () => {
+        router.push({ pathname: "(tabs)/events/attendance_list", params: {id} })
+    };
     
     const onShowQRCode = async () => {
         router.push({ pathname: "(tabs)/events/show_qr", params: {id, title} })
