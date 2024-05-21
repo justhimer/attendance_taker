@@ -15,6 +15,7 @@ export class InvitationsService {
     UNAUTHORIZED: 'You are not the host of the event.',
     USER_NOT_EXIST: 'The user does not exist.',
     USER_ALREADY_INVITED: 'The user is already invited to the event.',
+    CANNOT_INVITE_SELF: 'You cannot invite yourself.',
   }
 
   async create(
@@ -38,7 +39,7 @@ export class InvitationsService {
         }
         // check if the invitee is the host
         if (event.hosted_by === createInvitationDto.user_id) {
-          throw new HttpException('You cannot invite yourself.', HttpStatus.BAD_REQUEST);
+          throw this.createErrorMessages.CANNOT_INVITE_SELF;
         }
 
         // check if the invitation is created for an existing user
