@@ -4,10 +4,11 @@ import useAPI_WithParams from '@/utils/UseAPI_WithParams';
 import { getAttendanceList } from '../../../apis/attendanceAPI';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import EmptyState from '@/components/EmptyState';
+import AttendanceCard from '@/components/AttendanceCard';
 
 const attendance_list = () => {
     const { id }: any = useLocalSearchParams();  // id means event_id
-    console.log(id);
 
     const { data: attendanceList, refetch: refetchAttendanceList } = useAPI_WithParams(getAttendanceList, +id);
 
@@ -18,11 +19,21 @@ const attendance_list = () => {
             keyExtractor={(item: any) => item.id}
             renderItem={({ item }) => (
             <View>
-                <Text>{item.id}</Text>
-                <Text>{item.user_id}</Text>
-                <Text>{item.event_id}</Text>
-                <Text>{item.attend_time}</Text>
+                <AttendanceCard
+                    id={+item.id}
+                    username={item.user.username}
+                    email={item.user.email}
+                    attend_time={item.attend_time}
+                    start={item.event.start}
+                    end={item.event.end}
+                />
             </View>
+            )}
+            ListEmptyComponent={() => (
+                <EmptyState
+                  title="No Attendance Found"
+                  subtitle="Please invite people to join."
+                />
             )}
         />
     </SafeAreaView>

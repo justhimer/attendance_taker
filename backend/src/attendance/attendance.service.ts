@@ -41,6 +41,22 @@ export class AttendanceService {
 
       const attendanceRecords = await this.prisma.attendance.findMany({
         where: whereClause,
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+            }
+          },
+          event: {
+            select: {
+              id: true,
+              start: true,
+              end: true,
+            }
+          }
+        },
       });
 
       return attendanceRecords.map(attendance => plainToClass(Attendance, attendance));

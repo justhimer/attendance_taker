@@ -110,9 +110,9 @@ export class AttendanceController {
           throw new HttpException('You cannot attend after the event end time.', HttpStatus.BAD_REQUEST);
         }
 
-        // user cannot attend before 1 hour of the event start time
-        if (updateAttendanceDto.attend_time && new Date(updateAttendanceDto.attend_time) < new Date(attendanceRecord.event.start.getTime() - 60 * 60 * 1000)) {
-          throw new HttpException('You cannot attend before 1 hour of the event start time.', HttpStatus.BAD_REQUEST);
+        // user cannot attend before 3 hours of the event start time
+        if (updateAttendanceDto.attend_time && new Date(updateAttendanceDto.attend_time) < new Date(attendanceRecord.event.start.getTime() - 3* 60 * 60 * 1000)) {
+          throw new HttpException('You cannot attend before 3 hours of the event start time.', HttpStatus.BAD_REQUEST);
         }
 
         // if user attend on time, user cannot set the late_reason and absent_reason
