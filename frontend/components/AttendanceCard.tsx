@@ -1,5 +1,5 @@
 import { View, Text, Pressable, Image, Alert } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import images from '@/constants/Images';
 import { format as dateFormat, parseISO } from 'date-fns';
 import { patchAttendance } from '@/apis/attendanceAPI';
@@ -14,6 +14,9 @@ export interface IAttendanceCardData {
 }
 
 const AttendanceCard = (data: IAttendanceCardData) => {
+  const [attendStatus, setAttendStatus] = React.useState('Pending');
+  const [badgeColor, setBadgeColor] = React.useState('red-500');
+
   const convertTime = (timeString: string | null) => {
     if (timeString) {
       return dateFormat(parseISO(timeString), 'yyyy-MM-dd HH:mm');
@@ -21,20 +24,32 @@ const AttendanceCard = (data: IAttendanceCardData) => {
     return 'N/A';
   }
 
-  const getAttendStatus = () => {
+  const analyseAttendStatus = () => {
     if (!data.attend_time) {
       if (new Date() <= new Date(data.end)) {
-        return 'Pending';
+        setAttendStatus('Pending');
+        setBadgeColor('yellow-500');
+        return;
       }
-      return 'Absent';
+      setAttendStatus('Absent');
+      setBadgeColor('red-500');
+      return;
     }
 
     if (new Date(data.attend_time) <= new Date(data.start)) {
-      return 'Attended';
+      setAttendStatus('Attended');
+      setBadgeColor('green-500');
+      return;
     } else {
-      return 'Late';
+      setAttendStatus('Late');
+      setBadgeColor('yellow-500');
+      return;
     }
   }
+
+  useEffect(() => {
+    analyseAttendStatus();
+  }, [data.attend_time]);
 
   const handleCardClick = () => {
     Alert.alert(
@@ -92,9 +107,17 @@ const AttendanceCard = (data: IAttendanceCardData) => {
 
         <View className="pt-4">
           {/* Use badge */}
-          <Text className="text-xs text-white bg-yellow-500 px-2 py-1 rounded-full">
-            {getAttendStatus()}
-          </Text>
+          <View className={`bg-${badgeColor} rounded-full px-2 py-1`}>
+            <Text className="text-white text-xs font-psemibold">{attendStatus}</Text>
+          </View>
+          {/* { attendStatus === 'Absent' ? (
+            <View className="bg-red-500 rounded-full px-2 py-1">
+              <Text className="text-white text-xs font-psemibold">{attendStatus}</Text>
+            </View> ) : (
+            <View className="bg-green-500 rounded-full px-2 py-1">
+              <Text className="text-white text-xs font-psemibold">{attendStatus}</Text>
+            </View>)
+          } */}
         </View>
       </View>
     </Pressable>
