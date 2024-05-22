@@ -19,7 +19,7 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post('login')
+  @Post('')
   async authenticate(@Body() authRequest: AuthRequest) {
     try{
       Logger.log(`Authenticating user: ${authRequest.email}`);
