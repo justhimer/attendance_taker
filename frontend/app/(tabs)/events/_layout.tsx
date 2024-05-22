@@ -42,6 +42,13 @@ export default function EventStack() {
           headerShown: true,
         }}
       />
+      <Stack.Screen
+        name="attendance_list"
+        options={{
+          title: 'Attendance List',
+          headerShown: true,
+        }}
+      />
     </Stack>
   )
 }
