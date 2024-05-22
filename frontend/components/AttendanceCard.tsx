@@ -23,13 +23,13 @@ const AttendanceCard = (data: IAttendanceCardData) => {
 
   const getAttendStatus = () => {
     if (!data.attend_time) {
-      if (new Date() < new Date(data.end)) {
+      if (new Date() <= new Date(data.end)) {
         return 'Pending';
       }
       return 'Absent';
     }
 
-    if (new Date(data.attend_time) < new Date(data.start)) {
+    if (new Date(data.attend_time) <= new Date(data.start)) {
       return 'Attended';
     } else {
       return 'Late';
@@ -37,12 +37,28 @@ const AttendanceCard = (data: IAttendanceCardData) => {
   }
 
   const handleCardClick = () => {
-    Alert.prompt(
+    Alert.alert(
       'Change Attendance Time',
-      'Enter a new attendance time or leave empty to set it to null:',
-      async (newTime: string | null) => {
-        await patchAttendance(data.id, { attend_time: newTime });
-      }
+      'Choose Attendance Status',
+      [
+        {
+          text: 'Attended',
+          onPress: () => patchAttendance(data.id, { attend_time: data.start }),
+        },
+        {
+          text: 'Late',
+          onPress: () => patchAttendance(data.id, { attend_time: data.end }),
+        },
+        {
+          text: 'Not Attended',
+          onPress: () => patchAttendance(data.id, { attend_time: null }),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
     );
   };
 
