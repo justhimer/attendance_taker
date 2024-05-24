@@ -126,14 +126,9 @@ const EventDetailsScreen = () => {
                     {title}
                 </Text>
 
-                <View className="flex justify-center items-center flex-row flex-1">
+                {/* <View className="flex justify-center items-center flex-row flex-1">
                     <View className="w-[46px] h-[46px] rounded-lg  flex justify-center items-center p-0.5">
                         <Ionicons size={28} name='calendar' style={[{ color: 'white' }]} />
-                        {/* <Image
-                            source={images.event}
-                            className="w-full h-full rounded-lg"
-                            resizeMode="cover"
-                        /> */}
                     </View>
 
                     <Text
@@ -151,7 +146,7 @@ const EventDetailsScreen = () => {
                             {dateFormat(start, 'yyyy-MM-dd')}
                         </Text>
                     </View>
-                </View>
+                </View> */}
 
                 <View className="flex justify-center items-center flex-row flex-1">
                     <View className="w-[46px] h-[46px] rounded-lg  flex justify-center items-center p-0.5">
@@ -170,7 +165,7 @@ const EventDetailsScreen = () => {
                             className="text-xs text-gray-100 font-pregular"
                             numberOfLines={1}
                         >
-                            {dateFormat(start, 'HH:mm:ss')}
+                            {dateFormat(start, 'yyyy-MM-dd  HH:mm:ss')}
                         </Text>
                     </View>
                 </View>
@@ -192,7 +187,7 @@ const EventDetailsScreen = () => {
                             className="text-xs text-gray-100 font-pregular"
                             numberOfLines={1}
                         >
-                            {dateFormat(end, 'HH:mm:ss')}
+                            {dateFormat(end, 'yyyy-MM-dd  HH:mm:ss')}
                         </Text>
                     </View>
                 </View>
