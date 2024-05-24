@@ -78,7 +78,7 @@ const Events = () => {
               onSelect={index => setSelectedIndex(index)}
             >
               <Tab title='I HOST' />
-              <Tab title='I ATTEND' />
+              <Tab title='I JOIN' />
             </TabBar>
           </View>
         )}
@@ -94,7 +94,7 @@ const Events = () => {
         ListEmptyComponent={() => (
           <EmptyState
             title="No Events Found"
-            subtitle="Please join an event."
+            subtitle="Please host/join an event."
           />
         )}
         refreshControl={
