@@ -23,7 +23,7 @@ export default function TabLayout() {
           options={{
             title: 'Events',
             tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+              <TabBarIcon name={focused ? 'calendar' : 'calendar-outline'} color={color} />
             ),
           }}
         />
@@ -32,7 +32,7 @@ export default function TabLayout() {
           options={{
             title: 'Inviations',
             tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+              <TabBarIcon name={focused ? 'alarm' : 'alarm-outline'} color={color} />
             ),
           }}
         />
@@ -41,7 +41,7 @@ export default function TabLayout() {
           options={{
             title: 'Profile',
             tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name={focused ? 'star' : 'star-outline'} color={color} />
+              <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
             ),
           }}
         />
