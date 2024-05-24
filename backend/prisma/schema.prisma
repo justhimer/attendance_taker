@@ -27,8 +27,8 @@ model Users {
   events            Events[]
   attendance        Attendance[]
   invitations       Invitations[]
-  contacts_user     Contacts[]    @relation("contact_user")
-  contacts_contact  Contacts[]    @relation("contact_contact")
+  // contacts_user     Contacts[]    @relation("contact_user")
+  // contacts_contact  Contacts[]    @relation("contact_contact")
 }
 
 model Events {
@@ -71,12 +71,12 @@ model Invitations {
   updated_at  DateTime @updatedAt @db.Timestamptz
 }
 
-model Contacts {
-  id          Int      @id @default(autoincrement())
-  user_id     Int      @db.Integer
-  user        Users    @relation("contact_user", fields: [user_id], references: [id], onDelete: Cascade)
-  contact_id  Int      @db.Integer
-  contact     Users    @relation("contact_contact", fields: [contact_id], references: [id], onDelete: Cascade)
-  created_at  DateTime @default(now()) @db.Timestamptz
-  updated_at  DateTime @updatedAt @db.Timestamptz
-}
+// model Contacts {
+//   id          Int      @id @default(autoincrement())
+//   user_id     Int      @db.Integer
+//   user        Users    @relation("contact_user", fields: [user_id], references: [id], onDelete: Cascade)
+//   contact_id  Int      @db.Integer
+//   contact     Users    @relation("contact_contact", fields: [contact_id], references: [id], onDelete: Cascade)
+//   created_at  DateTime @default(now()) @db.Timestamptz
+//   updated_at  DateTime @updatedAt @db.Timestamptz
+// }
