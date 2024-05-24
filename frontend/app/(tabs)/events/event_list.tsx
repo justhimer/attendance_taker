@@ -77,8 +77,8 @@ const Events = () => {
               selectedIndex={selectedIndex}
               onSelect={index => setSelectedIndex(index)}
             >
-              <Tab title='I HOST' />
-              <Tab title='I JOIN' />
+              <Tab title='I HOSTED' />
+              <Tab title='I JOINT' />
             </TabBar>
           </View>
         )}
