@@ -6,6 +6,7 @@ import images from "@/constants/Images";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { patchEvent } from '@/apis/eventAPI';
 import * as Crypto from 'expo-crypto';
+import CustomButton from '@/components/CustomButton';
 
 export interface QRCodeData {
     event_id: number;
@@ -64,9 +65,17 @@ const ShowQR = () => {
                 size={300}
                 backgroundColor="transparent"
             />
-            <TouchableOpacity onPress={handleToggle}>
+            <CustomButton
+                title={ isToggled ? 'Stop Refresh' : 'Start Refresh' }
+                handlePress={handleToggle}
+                containerStyles="mt-10 w-48"
+            />
+            <Text className="text-center mt-3 text-sm text-black font-psemibold">
+               Now { isToggled ? 'Refreshing QR Code Every 20 Seconds' : 'Not Refreshing QR Code' }
+            </Text>
+            {/* <TouchableOpacity onPress={handleToggle}>
                 <Text>{isToggled ? 'Stop Toggling' : 'Start Toggling'}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
         </SafeAreaView>
     );

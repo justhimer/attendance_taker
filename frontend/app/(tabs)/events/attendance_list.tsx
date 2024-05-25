@@ -25,26 +25,17 @@ const attendance_list = () => {
             data={attendanceList}
             keyExtractor={(item: any) => item.id}
             renderItem={({ item }) => (
-            <View>
-                <AttendanceCard
-                    id={+item.id}
-                    username={item.user.username}
-                    email={item.user.email}
-                    attend_time={item.attend_time}
-                    start={item.event.start}
-                    end={item.event.end}
-                />
-            </View>
+                <View>
+                    <AttendanceCard
+                        id={+item.id}
+                        username={item.user.username}
+                        email={item.user.email}
+                        attend_time={item.attend_time}
+                        start={item.event.start}
+                        end={item.event.end}
+                    />
+                </View>
             )}
-            // ListHeaderComponent={() => (
-            //     <View className="flex my-6 px-4 space-y-6">
-            //       <View className="flex justify-between items-start flex-row mb-6">
-            //         <Text className="text-2xl font-psemibold text-white">
-            //           Attendance
-            //         </Text>
-            //       </View>
-            //     </View>
-            // )}
             ListEmptyComponent={() => (
                 <EmptyState
                   title="No Attendance Found"

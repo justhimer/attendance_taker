@@ -11,7 +11,7 @@ const route = 'auth';
 
 export async function signIn(loginData: ISignInData) {
   // const json = JSON.stringify(loginData);
-  const res = await fetch(`${endpointUrl}/${route}/login`, {
+  const res = await fetch(`${endpointUrl}/${route}`, {
     method: 'POST',
     body: JSON.stringify(loginData),
     headers: {

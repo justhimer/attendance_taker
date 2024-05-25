@@ -28,7 +28,7 @@ const AttendanceCard = (data: IAttendanceCardData) => {
     if (!data.attend_time) {
       if (new Date() <= new Date(data.end)) {
         setAttendStatus('Pending');
-        setBadgeColor('yellow-500');
+        setBadgeColor('grey-500');
         return;
       }
       setAttendStatus('Absent');
@@ -42,7 +42,7 @@ const AttendanceCard = (data: IAttendanceCardData) => {
       return;
     } else {
       setAttendStatus('Late');
-      setBadgeColor('yellow-500');
+      setBadgeColor('orange-500');
       return;
     }
   }

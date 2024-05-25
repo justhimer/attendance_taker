@@ -11,6 +11,7 @@ export default function ScanQR() {
   // const [latestQRUUID, setLatestQRUUID] = useState('none');
   
   const [permission, requestPermission] = useCameraPermissions();
+  const [isScanning, setIsScanning] = useState(false);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -37,18 +38,23 @@ export default function ScanQR() {
   }
 
   async function onQRCodeReceived(data: QRCodeData) {
-    const eventData = await getEvent(event_id);
+    try {
+      const eventData = await getEvent(event_id);
 
-    if (eventData.attend_time) {
-      Alert.alert('Attend Failed', 'You have already attended the event');
-      router.replace('(tabs)/events/event_list');
-    }
+      if (eventData.attend_time) {
+        Alert.alert('Attend Failed', 'You have already attended the event');
+        router.back();
+      }
 
-    const isQRCodeValid = await checkIfQRCodeValid(data, eventData);
-    if (isQRCodeValid) {
-      await patchMyAttendance();
-      Alert.alert('Attend Success', 'You have successfully attended the event');
-      router.replace('(tabs)/events/event_list');
+      const isQRCodeValid = await checkIfQRCodeValid(data, eventData);
+      if (isQRCodeValid) {
+        await patchMyAttendance();
+        Alert.alert('Attend Success', 'You have successfully attended the event');
+        router.back();
+      }
+    } catch (error) {
+      Alert.alert('Attend Failed', (error as Error).message);
+      router.back();
     }
   }
 
@@ -60,9 +66,14 @@ export default function ScanQR() {
             barcodeTypes: ["qr"],
         }}
         onBarcodeScanned={async (scannedData: BarcodeScanningResult) => {
+            if (isScanning) {
+                return;
+            }
+            setIsScanning(true);
             const { type, data } = scannedData;
             const qrCodeData: QRCodeData = JSON.parse(data);
             await onQRCodeReceived(qrCodeData);
+            setIsScanning(false);
         }}
       >
         <View style={styles.buttonContainer}>

@@ -54,7 +54,7 @@ const EventDetailsScreen = () => {
                 const attendDateTime = new Date(time);
                 const attendedOrLate = attendDateTime > parseISO(end) ? 'Attended(Late)' : 'Attended(On Time)';
                 const formattedDateTime = dateFormat(attendDateTime, 'yyyy-MM-dd HH:mm:ss');
-                setMyAttendStatus(`${attendedOrLate}: ${formattedDateTime}`);
+                setMyAttendStatus(`${attendedOrLate}:\r${formattedDateTime}`);
             }
         }
     }

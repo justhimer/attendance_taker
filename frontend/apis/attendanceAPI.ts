@@ -1,6 +1,7 @@
 import { endpointUrl } from './apiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getCurrentUser } from './userAPI';
+import { responseErrorMsgHandler } from '@/utils/ErrorMsgHandler';
 
 const route = 'attendance';
 
@@ -47,8 +48,8 @@ export async function getMyAttendance(eventId: number) {
 }
 
 export async function patchAttendance(attendanceId: number, data: any) {
-  console.log('attendanceId', attendanceId);
-  console.log('data', data);
+  // console.log('attendanceId', attendanceId);
+  // console.log('data', data);
   const jwttoken = await AsyncStorage.getItem('jwttoken');
 
   const res = await fetch(`${endpointUrl}/${route}/${attendanceId}`, {
@@ -66,6 +67,9 @@ export async function patchAttendance(attendanceId: number, data: any) {
       return result.data;
     }
   }
+
+  const error = await responseErrorMsgHandler(res);
+  throw new Error('Patch Attendance Failed.' + error.message);
 }
 
 // export async function getSingleAttendance(id: number) {
