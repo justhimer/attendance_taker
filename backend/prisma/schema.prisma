@@ -54,8 +54,6 @@ model Attendance {
   event_id      Int        @db.Integer
   event         Events     @relation(fields: [event_id], references: [id], onDelete: Cascade)
   attend_time   DateTime?  @db.Timestamptz
-  late_reason   String?    @db.Text
-  absent_reason String?    @db.Text
   created_at    DateTime   @default(now()) @db.Timestamptz
   updated_at    DateTime   @updatedAt @db.Timestamptz
 }

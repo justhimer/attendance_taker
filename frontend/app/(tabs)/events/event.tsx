@@ -203,8 +203,8 @@ const EventDetailsScreen = () => {
                 <View className={`space-y-2 mt-2`}>
                     <Text className="text-base text-gray-100 font-pmedium">Details</Text>
 
-                    <View className="w-full h-[150px] px-4 bg-black-100 rounded-2xl border-2 border-black-200 flex flex-row items-center">
-                        <TextInput editable={false} multiline value={details? details : 'No details.'} className="py-[10px] h-[150px] text-white font-psemibold text-base" />
+                    <View className="w-full h-[100px] px-4 bg-black-100 rounded-2xl border-2 border-black-200 flex flex-row items-center">
+                        <TextInput editable={false} multiline value={details? details : 'No details.'} className="py-[10px] h-[100px] text-white font-psemibold text-base" />
                     </View>
                 </View>
 
@@ -246,17 +246,18 @@ const EventDetailsScreen = () => {
                             </View>
                         </View>
 
-                        <CustomButton
-                            title="Refresh Attendance"
-                            handlePress={fetchMyAttendance}
-                            containerStyles="mt-5 flex-auto"
-                        />
-
-                        <CustomButton
-                            title="Scan QR Code"
-                            handlePress={onScanQRCode}
-                            containerStyles="mt-5 flex-auto"
-                        />
+                        <View className="mt-4 flex flex-row w-full">
+                            <CustomButton
+                                title="Refresh"
+                                handlePress={fetchMyAttendance}
+                                containerStyles="mt-0 flex-auto w-48 mr-4"
+                            />
+                            <CustomButton
+                                title="Scan QR Code"
+                                handlePress={onScanQRCode}
+                                containerStyles="mt-0 flex-auto w-48"
+                            />
+                        </View>
 
                         {/* { 
                             myAttendStatus !== "Absent" ? (
