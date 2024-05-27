@@ -45,7 +45,7 @@ const ShowQR = () => {
     useEffect(() => {
         if (isToggled) {
             getQRCodeValue();
-            const interval = setInterval(getQRCodeValue, 20000); // Toggle every 20 seconds
+            const interval = setInterval(getQRCodeValue, 5000); // Toggle every 5 seconds
 
             return () => clearInterval(interval);
         }
@@ -71,7 +71,7 @@ const ShowQR = () => {
                 containerStyles="mt-10 w-48"
             />
             <Text className="text-center mt-3 text-sm text-black font-psemibold">
-               Now { isToggled ? 'Refreshing QR Code Every 20 Seconds' : 'Not Refreshing QR Code' }
+               Now { isToggled ? 'Refreshing QR Code Every 5 Seconds' : 'Not Refreshing QR Code' }
             </Text>
             {/* <TouchableOpacity onPress={handleToggle}>
                 <Text>{isToggled ? 'Stop Toggling' : 'Start Toggling'}</Text>
