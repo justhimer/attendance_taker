@@ -51,9 +51,6 @@ export default function ScanQR() {
         await patchMyAttendance();
         Alert.alert('Attend Success', 'You have successfully attended the event');
         router.back();
-      } else {
-        Alert.alert('Attend Failed', 'Invalid QR Code');
-        router.back();
       }
     } catch (error) {
       Alert.alert('Attend Failed', (error as Error).message);
