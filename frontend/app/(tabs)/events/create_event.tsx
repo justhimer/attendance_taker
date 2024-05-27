@@ -84,6 +84,7 @@ const CreateEvent = () => {
                     value={form.start? new Date(form.start) : new Date()}
                     mode="datetime" // or "date" for date picker only
                     display="default"
+                    themeVariant="dark"
                     onChange={handleStartChange}
                 />
 
@@ -95,6 +96,7 @@ const CreateEvent = () => {
                     value={form.end? new Date(form.end) : new Date()}
                     mode="datetime" // or "date" for date picker only
                     display="default"
+                    themeVariant="dark"
                     onChange={handleEndChange}
                 />
                 

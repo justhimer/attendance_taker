@@ -52,9 +52,9 @@ const EventDetailsScreen = () => {
                 }
             } else {
                 const attendDateTime = new Date(time);
-                const attendedOrLate = attendDateTime > parseISO(end) ? 'Attended(Late)' : 'Attended(On Time)';
+                const attendedOrLate = attendDateTime > parseISO(end) ? 'Late' : 'Attended';
                 const formattedDateTime = dateFormat(attendDateTime, 'yyyy-MM-dd HH:mm:ss');
-                setMyAttendStatus(`${attendedOrLate}:\r${formattedDateTime}`);
+                setMyAttendStatus(`${attendedOrLate}: ${formattedDateTime}`);
             }
         }
     }
