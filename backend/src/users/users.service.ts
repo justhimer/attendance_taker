@@ -100,6 +100,46 @@ export class UsersService {
     }
   }
 
+  async findByID(id: number): Promise<User> {
+    try {
+      const user = await this.prisma.users.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      let returnUser: User = null;
+      if (user) {
+        returnUser = plainToClass(User, user);
+      }
+
+      return returnUser;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findManyByIDs(ids: number[]): Promise<User[]> {
+    try {
+      const users = await this.prisma.users.findMany({
+        where: {
+          id: {
+            in: ids,
+          },
+        },
+      });
+
+      let returnUsers: User[] = [];
+      if (users.length > 0) {
+        returnUsers = users.map((user) => plainToClass(User, user));
+      }
+
+      return returnUsers;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   // update(id: number, updateUserDto: UpdateUserDto) {
   //   return `This action updates a #${id} user`;
   // }

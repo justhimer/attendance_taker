@@ -66,20 +66,22 @@ const EventDetailsScreen = () => {
     }, []);
 
     const onInvite = async () => {
-        Alert.prompt('Enter User ID', 'Please enter the ID of the user you want to invite:', async (userId) => {
-            if (userId) {
-                try {
-                    const result = await createInvitation(+id, +userId); // Replace with your actual API call
-                    if (result) {
-                        Alert.alert('Success', 'Invitation sent successfully!');
-                    } else {
-                        Alert.alert('Error', 'Failed to send invitation.');
-                    }
-                } catch (error) {
-                    Alert.alert('Error', (error as Error).message);
-                }
-            }
-        });
+        router.push({ pathname: "(tabs)/events/invite", params: {eventId: id} })
+
+        // Alert.prompt('Enter User ID', 'Please enter the ID of the user you want to invite:', async (userId) => {
+        //     if (userId) {
+        //         try {
+        //             const result = await createInvitation(+id, +userId); // Replace with your actual API call
+        //             if (result) {
+        //                 Alert.alert('Success', 'Invitation sent successfully!');
+        //             } else {
+        //                 Alert.alert('Error', 'Failed to send invitation.');
+        //             }
+        //         } catch (error) {
+        //             Alert.alert('Error', (error as Error).message);
+        //         }
+        //     }
+        // });
     };
 
     const onAttendance = async () => {

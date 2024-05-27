@@ -7,12 +7,13 @@ import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { InvitationsModule } from './invitations/invitations.module';
+import { ContactsModule } from './contacts/contacts.module';
 
 @Module({
   imports: [
     // PrismaModule.forRoot(),
     UsersModule, 
-    AuthModule, EventsModule, AttendanceModule, InvitationsModule
+    AuthModule, EventsModule, AttendanceModule, InvitationsModule, ContactsModule
   ], // forRoot() : global use
   controllers: [AppController],
   providers: [AppService],

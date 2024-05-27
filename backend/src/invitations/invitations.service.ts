@@ -11,10 +11,10 @@ export class InvitationsService {
   constructor(private prisma: PrismaService) { }
 
   createErrorMessages = {
-    NOT_FOUND: 'The event does not exist.',
+    NOT_FOUND: 'Event does not exist.',
     UNAUTHORIZED: 'You are not the host of the event.',
-    USER_NOT_EXIST: 'The user does not exist.',
-    USER_ALREADY_INVITED: 'The user is already invited to the event.',
+    USER_NOT_EXIST: 'User does not exist.',
+    USER_ALREADY_INVITED: 'User already invited.',
     CANNOT_INVITE_SELF: 'You cannot invite yourself.',
   }
 
@@ -71,6 +71,74 @@ export class InvitationsService {
         return {
           id: newInvitation.id,
         }
+      });
+
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async createBulk(
+    inviterId: number, 
+    createInvitationDtos: CreateInvitationDto[]
+  ): Promise<number> {
+    try {
+      const result = await this.prisma.$transaction(async (tx) => {
+        // checking
+        const eventIds = createInvitationDtos.map((dto) => dto.event_id);
+        const events = await tx.events.findMany({
+          where: {
+            id: {
+              in: eventIds,
+            },
+          },
+        });
+        if (events.length < 1) {
+          throw this.createErrorMessages.NOT_FOUND;
+        }
+
+        const hosts = events.map((event) => event.hosted_by);
+        if (hosts.some((host) => host !== inviterId)) {
+          throw this.createErrorMessages.UNAUTHORIZED;
+        }
+
+        const inviteeIds = createInvitationDtos.map((dto) => dto.user_id);
+        // console.log('inviteeIds', inviteeIds);
+        const users = await tx.users.findMany({
+          where: {
+            id: {
+              in: inviteeIds,
+            },
+          },
+        });
+        if (users.length !== inviteeIds.length) {
+          throw this.createErrorMessages.USER_NOT_EXIST;
+        }
+
+        // if some of the users are already invited, remove them from the list
+        const invitedUsers = await tx.invitations.findMany({
+          where: {
+            event_id: {
+              in: eventIds,
+            },
+            user_id: {
+              in: inviteeIds,
+            },
+          },
+        });
+        const invitedUserIds = invitedUsers.map((user) => user.user_id);
+        const newInvitationDtos = createInvitationDtos.filter((dto) => !invitedUserIds.includes(dto.user_id));
+
+        if (newInvitationDtos.length < 1) {
+          throw this.createErrorMessages.USER_ALREADY_INVITED;
+        }
+
+        const newInvitations = await tx.invitations.createMany({
+          data: newInvitationDtos,
+        });
+
+        return newInvitations.count;
       });
 
       return result;

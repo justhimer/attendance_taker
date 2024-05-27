@@ -35,6 +35,27 @@ export async function getInvitationsToMe() {
   }
 }
 
+export async function getSentInvitations(event_id: number) {
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const res = await fetch(
+    `${endpointUrl}/${route}?event_id=${event_id}`,
+    { 
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${jwttoken}`,
+      },
+    }
+  );
+
+  if (res.ok) {
+    const result = await res.json();
+    if (result.data) {
+      return result.data;
+    }
+  }
+}
+
 export async function createInvitation(event_id: number, user_id: number) {
   const jwttoken = await AsyncStorage.getItem('jwttoken');
 
@@ -55,6 +76,34 @@ export async function createInvitation(event_id: number, user_id: number) {
     const result = await res.json();
     if (result.data) {
         return result.data;
+    }
+  }
+}
+
+export async function createInvitations(event_id: number, user_ids: number[]) {
+  const jwttoken = await AsyncStorage.getItem('jwttoken');
+
+  const payload = user_ids.map((user_id) => ({
+    event_id,
+    user_id,
+    status: 'PENDING',
+  }));
+
+  // console.log('payload', payload);
+
+  const res = await fetch(`${endpointUrl}/${route}/bulk`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwttoken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (res.ok) {
+    const result = await res.json();
+    if (result.data) {
+      return result.data;
     }
   }
 }

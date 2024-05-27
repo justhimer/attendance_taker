@@ -41,6 +41,33 @@ export class InvitationsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Post('bulk')
+  async createBulk(@Request() req, @Body() createInvitationDto: CreateInvitationDto[]) {
+    try {
+      const invitationData = await this.invitationsService.createBulk(
+        req.user.id, 
+        createInvitationDto
+      );
+      return new Response(SuccessHttpStatus.CREATED, invitationData);
+    } catch (error) {
+      Logger.error(error.message);
+      if (error.message === this.invitationsService.createErrorMessages.NOT_FOUND) {
+        error.status = HttpStatus.NOT_FOUND;
+      }
+      if (error.message === this.invitationsService.createErrorMessages.UNAUTHORIZED) {
+        error.status = HttpStatus.UNAUTHORIZED;
+      }
+      if (error.message === this.invitationsService.createErrorMessages.USER_NOT_EXIST) {
+        error.status = HttpStatus.BAD_REQUEST;
+      }
+      if (error.message === this.invitationsService.createErrorMessages.USER_ALREADY_INVITED) {
+        error.status = HttpStatus.CONFLICT;
+      }
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(
     @Request() req, 
