@@ -77,7 +77,7 @@ const InvitationEventScreen = () => {
 
             if (res) {
                 Alert.alert('Success', 'Invitation rejected.');
-                router.replace('(tabs)/events/event_list');
+                router.replace('(tabs)/invitations/invitation_list');
             }
         } catch (error) {
             console.log(error);
