@@ -17,13 +17,13 @@ export class Attendance {
     @IsDateString()
     attend_time?: Date;
 
-    @IsOptional()
-    @IsString()
-    late_reason?: string;
+    // @IsOptional()
+    // @IsString()
+    // late_reason?: string;
 
-    @IsOptional()
-    @IsString()
-    absent_reason?: string;
+    // @IsOptional()
+    // @IsString()
+    // absent_reason?: string;
 
     @IsNotEmpty()
     @IsDate()

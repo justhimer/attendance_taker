@@ -115,12 +115,12 @@ export class AttendanceController {
           throw new HttpException('You cannot attend before 3 hours of the event start time.', HttpStatus.BAD_REQUEST);
         }
 
-        // if user attend on time, user cannot set the late_reason and absent_reason
-        if (updateAttendanceDto.attend_time && new Date(updateAttendanceDto.attend_time) <= attendanceRecord.event.start) {
-          if (updateAttendanceDto.late_reason || updateAttendanceDto.absent_reason) {
-            throw new HttpException('You cannot set late_reason or absent_reason if you attend on time.', HttpStatus.BAD_REQUEST);
-          }
-        }
+        // // if user attend on time, user cannot set the late_reason and absent_reason
+        // if (updateAttendanceDto.attend_time && new Date(updateAttendanceDto.attend_time) <= attendanceRecord.event.start) {
+        //   if (updateAttendanceDto.late_reason || updateAttendanceDto.absent_reason) {
+        //     throw new HttpException('You cannot set late_reason or absent_reason if you attend on time.', HttpStatus.BAD_REQUEST);
+        //   }
+        // }
       }
 
       const updatedAttendanceRecord = await this.attendanceService.update(+id, updateAttendanceDto);
@@ -156,29 +156,4 @@ export class AttendanceController {
       throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-  // @Post()
-  // create(@Body() createAttendanceDto: CreateAttendanceDto) {
-  //   return this.attendanceService.create(createAttendanceDto);
-  // }
-
-  // @Get()
-  // findAll() {
-  //   return this.attendanceService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.attendanceService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateAttendanceDto: UpdateAttendanceDto) {
-  //   return this.attendanceService.update(+id, updateAttendanceDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.attendanceService.remove(+id);
-  // }
 }
