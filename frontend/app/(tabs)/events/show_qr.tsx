@@ -57,26 +57,23 @@ const ShowQR = () => {
 
     return (
         <SafeAreaView className="bg-white h-full">
-        <View className="w-full flex justify-center items-center h-full">
-            <QRCode
-                value={qrCodeValue}
-                logo={images.logo}
-                logoSize={100}
-                size={300}
-                backgroundColor="transparent"
-            />
-            <CustomButton
-                title={ isToggled ? 'Stop Refresh' : 'Start Refresh' }
-                handlePress={handleToggle}
-                containerStyles="mt-10 w-48"
-            />
-            <Text className="text-center mt-3 text-sm text-black font-psemibold">
-               Now { isToggled ? 'Refreshing QR Code Every 5 Seconds' : 'Not Refreshing QR Code' }
-            </Text>
-            {/* <TouchableOpacity onPress={handleToggle}>
-                <Text>{isToggled ? 'Stop Toggling' : 'Start Toggling'}</Text>
-            </TouchableOpacity> */}
-        </View>
+            <View className="w-full flex justify-center items-center h-full">
+                <QRCode
+                    value={qrCodeValue}
+                    logo={images.logo}
+                    logoSize={100}
+                    size={300}
+                    backgroundColor="transparent"
+                />
+                <CustomButton
+                    title={ isToggled ? 'Stop Refresh' : 'Start Refresh' }
+                    handlePress={handleToggle}
+                    containerStyles="mt-10 w-48"
+                />
+                <Text className="text-center mt-3 text-sm text-black font-psemibold">
+                Now { isToggled ? 'Refreshing QR Code Every 5 Seconds' : 'Not Refreshing QR Code' }
+                </Text>
+            </View>
         </SafeAreaView>
     );
 };
