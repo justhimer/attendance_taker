@@ -97,7 +97,7 @@ const Invite = () => {
                             id={+item.contact.id}
                             username={item.contact.username}
                             email={item.contact.email}
-                            color={selectedContactUsers.includes(+item.contact.id) ? 'yellow-900' : 'transparent'}
+                            color={selectedContactUsers.includes(+item.contact.id) ? 'red-500' : 'transparent'}
                         />
                     </Pressable>
                 )}
