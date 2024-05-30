@@ -88,7 +88,23 @@ async function main() {
     data: {
       user_id: user2.id,
       event_id: event1.id,
+      attend_time: new Date('2024-05-15T08:30:00'),
+    },
+  });
+
+  await prisma.attendance.create({
+    data: {
+      user_id: user3.id,
+      event_id: event1.id,
       attend_time: new Date('2024-05-15T09:30:00'),
+    },
+  });
+
+  await prisma.attendance.create({
+    data: {
+      user_id: user4.id,
+      event_id: event1.id,
+      attend_time: null,
     },
   });
 
@@ -126,6 +142,22 @@ async function main() {
 
   await prisma.invitations.create({
     data: {
+      event_id: event1.id,
+      user_id: user3.id,
+      status: AcceptanceStatus.ACCEPTED,
+    },
+  });
+
+  await prisma.invitations.create({
+    data: {
+      event_id: event1.id,
+      user_id: user4.id,
+      status: AcceptanceStatus.ACCEPTED,
+    },
+  });
+
+  await prisma.invitations.create({
+    data: {
       event_id: event2.id,
       user_id: user1.id,
       status: AcceptanceStatus.ACCEPTED,
@@ -152,6 +184,20 @@ async function main() {
     data: {
       user_id: user1.id,
       contact_id: user2.id,
+    },
+  });
+
+  await prisma.contacts.create({
+    data: {
+      user_id: user1.id,
+      contact_id: user3.id,
+    },
+  });
+
+  await prisma.contacts.create({
+    data: {
+      user_id: user1.id,
+      contact_id: user4.id,
     },
   });
 
