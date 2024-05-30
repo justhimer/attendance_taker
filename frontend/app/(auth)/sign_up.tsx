@@ -7,6 +7,7 @@ import images from "../../constants/Images";
 import { CustomButton, FormField } from "../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { createUser } from "@/apis/userAPI";
+import { signIn } from "@/apis/authAPI";
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -26,10 +27,12 @@ const SignUp = () => {
 
     setSubmitting(true);
     try {
-      const result = await createUser(form);
-      setUser(result);
+      const signUpResult = await createUser(form);
+      const signInResult = await signIn({ email: form.email, password: form.password });
+      setUser(signInResult);
       setIsLogged(true);
 
+      Alert.alert("Success", "User registered successfully");
       router.replace("/profile");
     } catch (error) {
       Alert.alert("Error", (error as Error).message);
