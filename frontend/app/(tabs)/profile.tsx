@@ -58,7 +58,7 @@ const Profile = () => {
       setUser(result);
       setIsLogged(true);
 
-      Alert.alert("Success", "User signed in successfully");
+      Alert.alert("Success", "Username changed successfully");
     } catch (error) {
       Alert.alert("Error", (error as Error).message);
     } finally {
@@ -79,7 +79,7 @@ const Profile = () => {
       setUser(result);
       setIsLogged(true);
 
-      Alert.alert("Success", "User signed in successfully");
+      Alert.alert("Success", "Password changed successfully");
     } catch (error) {
       Alert.alert("Error", (error as Error).message);
     } finally {
@@ -100,7 +100,7 @@ const Profile = () => {
       setUser(result);
       setIsLogged(true);
 
-      Alert.alert("Success", "User signed in successfully");
+      Alert.alert("Success", "Phone number changed successfully");
     } catch (error) {
       Alert.alert("Error", (error as Error).message);
     } finally {
@@ -213,13 +213,13 @@ const Profile = () => {
             <View className="mt-2 flex flex-row w-full">
               <CustomButton
                 title="Change"
-                handlePress={changeUsername}
+                handlePress={changePhone}
                 containerStyles="mt-0 flex-auto w-48 mr-4"
                 isLoading={isSubmitting}
               />
               <CustomButton
                 title="Reset"
-                handlePress={resetUsername}
+                handlePress={resetPhone}
                 containerStyles="mt-0 flex-auto w-48"
                 textStyles="text-white"
                 isLoading={isSubmitting}
